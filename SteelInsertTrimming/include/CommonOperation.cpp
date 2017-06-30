@@ -17,6 +17,7 @@ CommonOperation::CommonOperation(const CommonTraits::Struct_Type& ParmData):Comm
     workPart = theSession->Parts()->Work();
     m_retOffsetSheet = new RetOffsetSheet(sheetsTag,sheetOffsetDist,offsetDeviation,stepoverDeviation,m_isMove, moveDir, sheetMoveDist);
 }
+
 CommonOperation::~CommonOperation()
 {
 }
@@ -285,9 +286,6 @@ void CommonOperation::extrudBlankBody(tag_t& extrud, tag_t sheetTag)
         MyFun::disp("拉大片体失败!");
         return;
     }
-    std::vector<tag_t> tempVLD(trimLtag);
-    for (int i = 0; i < m_assistLD.size(); i++)
-        tempVLD.push_back(m_assistLD[i].curve);
     double startP = 0;
     double endP = 0;
 
@@ -304,7 +302,7 @@ void CommonOperation::extrudBlankBody(tag_t& extrud, tag_t sheetTag)
 
     UF_initialize();
     if (UF_OBJ_ask_status(extrud) != UF_OBJ_DELETED) UF_OBJ_delete_object(extrud);
-    extrud = extrudorEx(tempVLD, *m_simplePro[0], cutDir, startP, endP, 0, 0);
+    extrud = extrudorEx(trimLtag, *m_simplePro[0], cutDir, startP, endP, 0, 0);
 
     if (extrud)
     {
@@ -312,12 +310,12 @@ void CommonOperation::extrudBlankBody(tag_t& extrud, tag_t sheetTag)
         {
             try
             {
-                BooleanOper(extrud, sheetTag, tempVLD[0], true, true, true);
+                BooleanOper(extrud, sheetTag, trimLtag[0], true, true, true);
             }
             catch (exception&)
             {
-                sheetTag = m_retOffsetSheet->retOffsetShet(0,moveDir, sheetMoveDist,m_isMove, 0.5, 1);
-                BooleanOper(extrud, sheetTag, tempVLD[0]);
+                sheetTag = m_retOffsetSheet->retOffsetSheet(0,moveDir, sheetMoveDist,m_isMove, 0.5, 1);
+                BooleanOper(extrud, sheetTag, trimLtag[0]);
             }
         }
     }
@@ -332,9 +330,6 @@ void CommonOperation::extrudBlankBodyUDST(tag_t& extrud, tag_t sheetTag)
         MyFun::disp("拉大片体失败!");
         return;
     }
-    std::vector<tag_t> tempVLD(trimLtag);
-    for (int i = 0; i < m_assistLD.size(); i++)
-        tempVLD.push_back(m_assistLD[i].curve);
     double startP = 0;
     double endP = 0;
 
@@ -351,7 +346,7 @@ void CommonOperation::extrudBlankBodyUDST(tag_t& extrud, tag_t sheetTag)
 
     UF_initialize();
     if (UF_OBJ_ask_status(extrud) != UF_OBJ_DELETED) UF_OBJ_delete_object(extrud);
-    extrud = extrudorEx(tempVLD, *m_simplePro[0], cutDir, startP, endP, 0, 0);
+    extrud = extrudorEx(trimLtag, *m_simplePro[0], cutDir, startP, endP, 0, 0);
 
     if (extrud)
     {
@@ -359,12 +354,12 @@ void CommonOperation::extrudBlankBodyUDST(tag_t& extrud, tag_t sheetTag)
         {
             try
             {
-                BooleanOperUDC_ST(extrud, tempVLD[0], sheetTag, true, true);
+                BooleanOperUDC_ST(extrud, trimLtag[0], sheetTag, true, true);
             }
             catch (exception&)
             {
-                sheetTag = m_retOffsetSheet->retOffsetShet(0,  moveDir, sheetMoveDist, m_isMove, 0.5, 1);
-                BooleanOperUDC_ST(extrud, tempVLD[0], sheetTag);
+                sheetTag = m_retOffsetSheet->retOffsetSheet(0,  moveDir, sheetMoveDist, m_isMove, 0.5, 1);
+                BooleanOperUDC_ST(extrud, trimLtag[0], sheetTag);
             }
 
         }
@@ -626,10 +621,8 @@ void CommonOperation::createBodyDST()
 
     UF_initialize();
     UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
-    sheetTag = m_retOffsetSheet->retOffsetShet(sheetOffsetDist,moveDir,sheetMoveDist, m_isMove, offsetDeviation,stepoverDeviation);
-    m_minDist = measureMinDimensionBCS(m_trimLD, sheetTag, cutDir);
-    m_curvesMoveDist = m_minDist * 2 + cutDirDeltaLen * 2;////下刀口专用.
-    offsetCurveSet();
+    sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist,moveDir,sheetMoveDist, m_isMove, offsetDeviation,stepoverDeviation);
+
     m_minDist = measureMinDimensionBCS(m_trimLD, sheetTag, cutDir);//偏置后需要再次求出最小距离
     extrudBlankBodyUDST(m_extrud, sheetTag);
 
@@ -655,7 +648,7 @@ void CommonOperation::createBodyUST()
 
     UF_initialize();
     UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
-    sheetTag = m_retOffsetSheet->retOffsetShet(sheetOffsetDist, moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
+    sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist, moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
     m_minDist = measureMinDimensionBCS(m_trimLD, sheetTag, cutDir);//偏置后需要再次求出最小距离
     extrudBlankBodyUDST(m_extrud, sheetTag);
     tag_t temp = 0;
@@ -701,7 +694,7 @@ void CommonOperation::createDetailDST()
 
         if (cutDirToolBlank)
         {
-            sheetTag = m_retOffsetSheet->retOffsetShet(sheetOffsetDist - cutDirCutLen,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
+            sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist - cutDirCutLen,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
             for (int i = 0; i < m_trimVCC.size(); i++)
             {
                 tag_t temp = createExtrudeBodyEx(m_trimVCC[i], intervalDist + cutDirToolBlank);
@@ -745,7 +738,7 @@ void CommonOperation::createDetailUST()
 
         if (cutDirToolBlank)
         {
-            sheetTag = m_retOffsetSheet->retOffsetShet(sheetOffsetDist + cutDirCutLen,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
+            sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist + cutDirCutLen,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
             for (int i = 0; i < m_trimVCC.size(); i++)
             {
                 tag_t temp = createExtrudeBodyEx(m_trimVCC[i], intervalDist + cutDirToolBlank);
@@ -910,9 +903,9 @@ void CommonOperation::createShapeBlank(int col1, int col2, int flagUD)
     {
         UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
         if (flagUD)
-            extrudBlankBody(body, m_retOffsetSheet->retOffsetShet(-cutShapeBlank + sheetOffsetDist,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation));
+            extrudBlankBody(body, m_retOffsetSheet->retOffsetSheet(-cutShapeBlank + sheetOffsetDist,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation));
         else
-            extrudBlankBody(body, m_retOffsetSheet->retOffsetShet(cutShapeBlank + sheetOffsetDist, moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation));
+            extrudBlankBody(body, m_retOffsetSheet->retOffsetSheet(cutShapeBlank + sheetOffsetDist, moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation));
         for (int i = 0; i < m_trimVCC.size(); i++)
         {
             tempVCC.vect.clear();
@@ -1108,51 +1101,13 @@ void CommonOperation::splinesProcessToLinesDUST(vector<tag_t> &tempSplines) //刚
     tempSplines = tempVVV;
 }
 
-void CommonOperation::offsetCurveSet()
-{
-    if (m_minDist)
-    {
-        if (m_curvesMoveDist == 0)
-            m_curvesMoveDist = m_minDist * 2;
-        for (int i = 0; i < m_trimLD.size(); i++)
-        {
-            moveObj(m_trimLD[i].curve, cutDir, m_curvesMoveDist);
-            MyFun::getDirectionPos(cutDir, m_trimLD[i].start_point, m_curvesMoveDist, m_trimLD[i].start_point);
-            MyFun::getDirectionPos(cutDir, m_trimLD[i].end_point, m_curvesMoveDist, m_trimLD[i].end_point);
-            UF_VEC3_copy(m_trimLD[i].end_point, m_trimLD[i].vertexPt);
-        }
-        for (int i = 0; i < m_assistLD.size(); i++)
-        {
-            moveObj(m_assistLD[i].curve, cutDir, m_curvesMoveDist);
-            MyFun::getDirectionPos(cutDir, m_assistLD[i].start_point, m_curvesMoveDist, m_assistLD[i].start_point);
-            MyFun::getDirectionPos(cutDir, m_assistLD[i].end_point, m_curvesMoveDist, m_assistLD[i].end_point);
-            UF_VEC3_copy(m_assistLD[i].end_point, m_assistLD[i].vertexPt);
-        }
-        for (int i = 0; i < m_trimVCC.size(); i++)
-        {
-            MyFun::getDirectionPos(cutDir, m_trimVCC[i].a.start_point, m_curvesMoveDist, m_trimVCC[i].a.start_point);
-            MyFun::getDirectionPos(cutDir, m_trimVCC[i].a.end_point, m_curvesMoveDist, m_trimVCC[i].a.end_point);
-            UF_VEC3_copy(m_trimVCC[i].a.end_point, m_trimVCC[i].a.vertexPt);
-            MyFun::getDirectionPos(cutDir, m_trimVCC[i].b.start_point, m_curvesMoveDist, m_trimVCC[i].b.start_point);
-            MyFun::getDirectionPos(cutDir, m_trimVCC[i].b.end_point, m_curvesMoveDist, m_trimVCC[i].b.end_point);
-            UF_VEC3_copy(m_trimVCC[i].b.end_point, m_trimVCC[i].b.vertexPt);
-        }
-        MyFun::getDirectionPos(cutDir, (*m_simplePro[0]).start_point, m_curvesMoveDist, (*m_simplePro[0]).start_point);
-        MyFun::getDirectionPos(cutDir, (*m_simplePro[0]).end_point, m_curvesMoveDist, (*m_simplePro[0]).end_point);
-        UF_VEC3_copy((*m_simplePro[0]).end_point, (*m_simplePro[0]).vertexPt);
-        MyFun::getDirectionPos(cutDir, (*m_simplePro.back()).start_point, m_curvesMoveDist, (*m_simplePro.back()).start_point);
-        MyFun::getDirectionPos(cutDir, (*m_simplePro.back()).end_point, m_curvesMoveDist, (*m_simplePro.back()).end_point);
-        UF_VEC3_copy((*m_simplePro.back()).end_point, (*m_simplePro.back()).vertexPt);
 
-
-    }
-}
 
 void CommonOperation::createToolBlank()
 {
     if (cutDirToolBlank)//刀口避让 
     {
-        sheetTag = m_retOffsetSheet->retOffsetShet(sheetOffsetDist - cutDirCutLen, moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
+        sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist - cutDirCutLen, moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
         for (int i = 0; i < m_trimVCC.size(); i++)
         {
             vccdata tempVcc = m_trimVCC[i];
@@ -1238,26 +1193,33 @@ void CommonOperation::getCurvesInfo(const TrimCurveData& info)
     m_assistLD.clear();
     m_trimLD.clear();
     m_trimVCC.clear();
+    trimLtag.clear();
     vector<vector<CurveData*>> rt_trimCruves;;
     vector<vector<CurveData*>> rt_assistCurves;
     sortCurvesPointor(*info.assist_, rt_assistCurves);
     sortCurvesPointor(*info.trim_, rt_trimCruves);
     for (int i = 0; i < rt_trimCruves.size(); i++)
-        for (int j = 0; j < rt_trimCruves[i].size(); j++)
-            m_trimLD.push_back(*rt_trimCruves[i][j]);
-    for (int i = 0; i < rt_assistCurves.size(); i++)
-        for (int j = 0; j < rt_assistCurves[i].size(); j++)
-            m_assistLD.push_back(*rt_assistCurves[i][j]);
-    for (int i = 0; i < rt_trimCruves.size(); i++)
     {
         vccdata temp;
-        int j;
-        for (j = 0; j < rt_trimCruves[i].size(); j++)
-            temp.vect.push_back(rt_trimCruves[i][j]->curve);
+        for (int j = 0; j < rt_trimCruves[i].size(); j++)
+        {
+            trimLtag.push_back(*rt_trimCruves[i][j]);
+            m_trimLD.push_back(*rt_trimCruves[i][j]);
+            temp.vect.push_back(*rt_trimCruves[i][j]);
+            
+        }
         temp.a = *rt_trimCruves[i][0];
         temp.b = *rt_trimCruves[i].back();
         m_trimVCC.push_back(temp);
     }
+       
+            
+    for (int i = 0; i < rt_assistCurves.size(); i++)
+        for (int j = 0; j < rt_assistCurves[i].size(); j++)
+        {
+            trimLtag.push_back(*rt_trimCruves[i][j]);
+            m_assistLD.push_back(*rt_assistCurves[i][j]);
+        }
     UF_VEC3_cross(m_trimVCC[0].a.dir_Center, m_trimVCC[0].b.dir_Center, cutDir);
 
 }

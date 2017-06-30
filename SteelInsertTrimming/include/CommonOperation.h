@@ -36,7 +36,6 @@ private:
         return;
     }
 
-
     void creataUST(const vector<TrimCurveData> &m_CurveDataUp)
     {
         for (int i = 0; i < m_CurveDataUp.size(); i++)
@@ -50,20 +49,11 @@ private:
 
     void getCurvesInfo(const TrimCurveData& info);
 
-
-
     void createBodyDST();
     void createBodyUST();
 
     void createDetailDST();
     void createDetailUST();
-
-
-//     void initialParamDST();
-//     void initialParamUSTE();
-//     void initialParamUSTL();
-
-
         //1下模 0上模
     void createShapeBlank(int col1, int col2, int flagUD = 1);
     void extrudBlankBody(tag_t& extrud, tag_t sheetTag);//创建坯体 flag位true时,
@@ -87,8 +77,7 @@ private:
 
     tag_t createOffsetSheetEx(vccdata vcc);
 
-    //将前期获取的修边线和辅助线  移动到 片体的另一侧(下方)
-    void offsetCurveSet();
+
     //创建梯度
     void createToolBlank();
 
@@ -108,7 +97,6 @@ private:
     std::vector<vccdata> m_trimVCC;//分组修边线
 
     double m_minDist;//修边线于目标片体最短距离
-    double m_curvesMoveDist;
 
     vector<CurveData*> m_simplePro;
 

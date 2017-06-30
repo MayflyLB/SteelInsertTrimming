@@ -151,7 +151,7 @@ RetOffsetSheet::RetOffsetSheet(std::vector<tag_t> sheets, double offsetDist, dou
                     break;
                 }
             }
-            m_retSheet = retOffsetShet(offsetDist, moveDir, moveDist/*= 0*/,isMove, offsetDeviation /*= 0*/, stepoverDeviation /*= 0*/);
+            m_retSheet = retOffsetSheet(offsetDist, moveDir, moveDist/*= 0*/,isMove, offsetDeviation /*= 0*/, stepoverDeviation /*= 0*/);
         }
         else
         {
@@ -203,7 +203,7 @@ RetOffsetSheet::RetOffsetSheet(std::vector<tag_t> sheets, double offsetDist, dou
     }
 }
 
-tag_t RetOffsetSheet::retOffsetShet(double offsetDist,double *moveDir,double moveDist/*= 0*/, bool isMove, double v1 /*= 0*/, double v2 /*= 0*/)
+tag_t RetOffsetSheet::retOffsetSheet(double offsetDist,double *moveDir,double moveDist/*= 0*/, bool isMove, double v1 /*= 0*/, double v2 /*= 0*/)
 {
     if (has_offsetSheet(offsetDist, isMove, moveDir,moveDist))
         return m_retSheet;

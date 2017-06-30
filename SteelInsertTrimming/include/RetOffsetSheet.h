@@ -13,7 +13,7 @@ public:
     RetOffsetSheet(std::vector<tag_t> sheets,double offsetDist, double offsetDeviation , 
         double stepoverDeviation ,bool isMove=false, double *moveDir=NULL,double movedist=0);
 
-    tag_t retOffsetShet(double offsetDist,double *movedir,double movedist=0, bool isMove = false, double v1 = 0, double v2 = 0);
+    tag_t retOffsetSheet(double offsetDist,double *movedir,double movedist=0, bool isMove = false, double v1 = 0, double v2 = 0);
     ~RetOffsetSheet(){}
 private:
     RetOffsetSheet(){}

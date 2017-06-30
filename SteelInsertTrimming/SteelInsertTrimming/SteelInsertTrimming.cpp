@@ -153,7 +153,7 @@ int SteelInsertTrimming::update_cb(NXOpen::BlockStyler::UIBlock* block)
         {
             getValue();
             RetOffsetSheet temp(sheetsTag, sheetOffsetDist,offsetDeviation,stepoverDeviation,m_isMove,moveDir, sheetMoveDist);
-            temp.retOffsetShet(sheetOffsetDist,moveDir,sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
+            temp.retOffsetSheet(sheetOffsetDist,moveDir,sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
         }
         else if (block == modlTypeUI)
         {
