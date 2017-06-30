@@ -20,9 +20,6 @@
     <ClCompile Include="..\include\assistFun.cpp">
       <Filter>公共函数</Filter>
     </ClCompile>
-    <ClCompile Include="..\include\CommonOperation.cpp">
-      <Filter>公共函数</Filter>
-    </ClCompile>
     <ClCompile Include="EditTrimCurves.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -35,9 +32,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\assistFun.h">
-      <Filter>公共函数</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\CommonOperation.h">
       <Filter>公共函数</Filter>
     </ClInclude>
     <ClInclude Include="..\include\DataStruction.h">

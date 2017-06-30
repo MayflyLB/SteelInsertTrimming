@@ -656,7 +656,7 @@ double MaxDimension(tag_t obj_, vector<tag_t> tagertObj, tag_t& retBody, double 
     return retD;
 }
 
-tag_t TrimExtendSheet(tag_t sheet)
+void TrimExtendSheet(tag_t& sheet)
 {
     Session *theSession = Session::GetSession();
     Part *workPart(theSession->Parts()->Work());
@@ -737,14 +737,15 @@ tag_t TrimExtendSheet(tag_t sheet)
     }
 
     trimExtendBuilder1->Destroy();
-    tag_t temp = 0;
     if (nXObject1)
     {
-        UF_MODL_ask_feat_body(nXObject1->GetTag(), &temp);
-        MyFun::DeleteParms(1, &temp);
+        UF_MODL_ask_feat_body(nXObject1->GetTag(), &sheet);
+        MyFun::DeleteParms(1, &sheet);
+        return ;
     }
-    UF_terminate();
-    return temp;
+    else
+        return;
+    
 }
 
 bool isContainning(vector<tag_t> curves, tag_t obj_)
@@ -1800,8 +1801,6 @@ void ArcTranslateLine(vector<vector<CurveData*>>&temp_)
                     UF_VEC3_sub(temp_[i][j]->end_point, temp_[i][j]->start_point, temp_[i][j]->dir_Center);
                 }
             }
-
-
         }
     }
     UF_terminate();

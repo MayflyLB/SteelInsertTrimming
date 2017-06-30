@@ -764,7 +764,6 @@ void CommonOperation::createDetailUST()
     }
 }
 
-
 tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)
 {
     double dist;
@@ -795,7 +794,6 @@ tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)
         delete[] joinCurve;
         UF_DISP_set_highlights(vcc.vect.size(), &vcc.vect[0], 1);
         uc1601("链接曲线出现问题!", 1);
-        return 0;
     }
     else
     {
@@ -1108,8 +1106,6 @@ void CommonOperation::splinesProcessToLinesDUST(vector<tag_t> &tempSplines) //刚
     sortCurves(tempVVV, simplePro, trimVCC, vertexPts, isTrimLClose);
     tempSplines = tempVVV;
 }
-
-
 
 void CommonOperation::createToolBlank()
 {

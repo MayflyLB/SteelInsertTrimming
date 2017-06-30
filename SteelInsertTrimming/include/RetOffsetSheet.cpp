@@ -162,6 +162,7 @@ RetOffsetSheet::RetOffsetSheet(std::vector<tag_t> sheets, double offsetDist, dou
             if (fabs(offsetDist) > 0.01)
             {
                 m_retSheet = offsetSheet(m_targerSheet, offsetDist, offsetDeviation, stepoverDeviation);
+                TrimExtendSheet(m_retSheet);
                 setOffSheetInfo(offsetDist);
                 m_allSheets.push_back(m_retSheet);
             }
@@ -187,6 +188,7 @@ RetOffsetSheet::RetOffsetSheet(std::vector<tag_t> sheets, double offsetDist, dou
         if (fabs(offsetDist) > 0.01)
         {
             m_retSheet = offsetSheet(m_targerSheet, offsetDist, offsetDeviation, stepoverDeviation);
+            TrimExtendSheet(m_retSheet);
             setOffSheetInfo(offsetDist); 
             m_allSheets.push_back(m_retSheet);
         }
@@ -210,6 +212,7 @@ tag_t RetOffsetSheet::retOffsetSheet(double offsetDist,double *moveDir,double mo
     else
     {
         m_retSheet = offsetSheet(m_targerSheet, offsetDist, v1, v2);
+        TrimExtendSheet(m_retSheet);
         setOffSheetInfo(offsetDist);
         m_allSheets.push_back(m_retSheet);
         if (moveDist&&moveDir)

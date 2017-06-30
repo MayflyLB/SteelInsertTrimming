@@ -167,9 +167,8 @@ void EditTrimCurves::simplifySpline()
 
     for (int i = 0; i < m_allTrimCurves.size(); i++)
         m_pTrimCurves.push_back(new CurveData(m_allTrimCurves[i])); 
-    ArcTranslateLine(m_trimCurvesGroupUP);
     sortCurvesPointor(m_pTrimCurves, m_trimCurvesGroupUP);
-    
+    ArcTranslateLine(m_trimCurvesGroupUP);
     stdProcessCurves(m_trimCurvesGroupUP);
     stdProcessCurves(m_trimCurvesGroupUP);
 

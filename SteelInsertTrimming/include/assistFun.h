@@ -551,7 +551,7 @@ tag_t sewSheets(vector<tag_t>& sheets);
 // Par: 		tag_t sheet
 // Ret:   		tag_t
 //********************************************************************
-tag_t TrimExtendSheet(tag_t sheet);
+void TrimExtendSheet(tag_t &sheet);
 
 bool isContainning(vector<tag_t> curves, tag_t obj_);
 

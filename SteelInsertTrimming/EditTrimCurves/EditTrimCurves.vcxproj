@@ -165,14 +165,12 @@ copy "$(TargetDir)$(TargetName).dll" "E:\UGProFiles\Application\";</Command>
   <ItemGroup>
     <ClCompile Include="..\..\include\PublicFun.cpp" />
     <ClCompile Include="..\include\assistFun.cpp" />
-    <ClCompile Include="..\include\CommonOperation.cpp" />
     <ClCompile Include="..\include\CurveAttrE.cpp" />
     <ClCompile Include="EditTrimCurves.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\PublicFun.h" />
     <ClInclude Include="..\include\assistFun.h" />
-    <ClInclude Include="..\include\CommonOperation.h" />
     <ClInclude Include="..\include\CurveAttrE.h" />
     <ClInclude Include="..\include\DataStruction.h" />
     <ClInclude Include="EditTrimCurves.hpp" />
