@@ -27,6 +27,7 @@ public:
 private:
     void creataDST(const vector<TrimCurveData> &m_CurveDataDw)
     {
+       
         for (int i=0;i<m_CurveDataDw.size();i++)
         {
             getCurvesInfo(m_CurveDataDw[i]);
@@ -97,9 +98,6 @@ private:
     std::vector<vccdata> m_trimVCC;//分组修边线
 
     double m_minDist;//修边线于目标片体最短距离
-
-    vector<CurveData*> m_simplePro;
-
     tag_t m_extrud;
 
     ////辅助变量

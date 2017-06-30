@@ -302,7 +302,7 @@ void CommonOperation::extrudBlankBody(tag_t& extrud, tag_t sheetTag)
 
     UF_initialize();
     if (UF_OBJ_ask_status(extrud) != UF_OBJ_DELETED) UF_OBJ_delete_object(extrud);
-    extrud = extrudorEx(trimLtag, *m_simplePro[0], cutDir, startP, endP, 0, 0);
+    extrud = extrudorEx(trimLtag, m_trimVCC[0].a, cutDir, startP, endP, 0, 0);
 
     if (extrud)
     {
@@ -346,7 +346,7 @@ void CommonOperation::extrudBlankBodyUDST(tag_t& extrud, tag_t sheetTag)
 
     UF_initialize();
     if (UF_OBJ_ask_status(extrud) != UF_OBJ_DELETED) UF_OBJ_delete_object(extrud);
-    extrud = extrudorEx(trimLtag, *m_simplePro[0], cutDir, startP, endP, 0, 0);
+    extrud = extrudorEx(trimLtag, m_trimVCC[0].a, cutDir, startP, endP, 0, 0);
 
     if (extrud)
     {
@@ -698,7 +698,7 @@ void CommonOperation::createDetailDST()
             for (int i = 0; i < m_trimVCC.size(); i++)
             {
                 tag_t temp = createExtrudeBodyEx(m_trimVCC[i], intervalDist + cutDirToolBlank);
-                BooleanOperUDC_ST(temp, m_simplePro[0]->curve, sheetTag);
+                BooleanOperUDC_ST(temp, m_trimVCC[0].a, sheetTag);
                 tag_t feat = 0;
                 UF_MODL_subtract_bodies_with_retained_options(m_extrud, temp, false, false, &feat);
                 UF_MODL_ask_feat_body(feat, &m_extrud);
@@ -742,7 +742,7 @@ void CommonOperation::createDetailUST()
             for (int i = 0; i < m_trimVCC.size(); i++)
             {
                 tag_t temp = createExtrudeBodyEx(m_trimVCC[i], intervalDist + cutDirToolBlank);
-                BooleanOperUDC_ST(temp, (*m_simplePro[0]).curve, sheetTag);
+                BooleanOperUDC_ST(temp, m_trimVCC[0].a, sheetTag);
                 setBodyColor(temp, 129, 129);
                 tag_t feat = 0;
                 UF_MODL_subtract_bodies_with_retained_options(m_extrud, temp, false, false, &feat);
@@ -750,6 +750,7 @@ void CommonOperation::createDetailUST()
                 MyFun::DeleteParms(1, &m_extrud);
             }
         }
+
         UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
         MyFun::resetUpdata();
         UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
@@ -790,11 +791,18 @@ tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)
     tag_p_t joinCurve = MyFun::createJoinedCurves(&vcc.vect[0], a);
     if (a != 1)
     {
+        joined_curve = joinCurve[0];
         delete[] joinCurve;
+        UF_DISP_set_highlights(vcc.vect.size(), &vcc.vect[0], 1);
         uc1601("链接曲线出现问题!", 1);
+        return 0;
     }
-    joined_curve = joinCurve[0];
-    delete[] joinCurve;
+    else
+    {
+        joined_curve = joinCurve[0];
+        delete[] joinCurve;
+    }
+
 
     int count_ = ((int)MyFun::get_spline_length(joined_curve)) / 5;
 
@@ -1114,7 +1122,7 @@ void CommonOperation::createToolBlank()
             UF_INITIALIZE();
             UF_CALL(UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY));
             tag_t temp = createExtrudeBodyEx(tempVcc, intervalDist + cutDirToolBlank, intervalDist + cutDirToolBlank);
-            BooleanOper(temp, sheetTag, (*m_simplePro[0]).curve);
+            BooleanOper(temp, sheetTag, m_trimVCC[0].a);
             setBodyColor(temp, 129, 129);//布尔后和工具体一个颜色
             m_tempBody.push_back(temp);
         }
@@ -1194,10 +1202,12 @@ void CommonOperation::getCurvesInfo(const TrimCurveData& info)
     m_trimLD.clear();
     m_trimVCC.clear();
     trimLtag.clear();
+    UF_INITIALIZE();
     vector<vector<CurveData*>> rt_trimCruves;;
     vector<vector<CurveData*>> rt_assistCurves;
     sortCurvesPointor(*info.assist_, rt_assistCurves);
     sortCurvesPointor(*info.trim_, rt_trimCruves);
+   
     for (int i = 0; i < rt_trimCruves.size(); i++)
     {
         vccdata temp;
@@ -1206,21 +1216,20 @@ void CommonOperation::getCurvesInfo(const TrimCurveData& info)
             trimLtag.push_back(*rt_trimCruves[i][j]);
             m_trimLD.push_back(*rt_trimCruves[i][j]);
             temp.vect.push_back(*rt_trimCruves[i][j]);
-            
         }
         temp.a = *rt_trimCruves[i][0];
         temp.b = *rt_trimCruves[i].back();
         m_trimVCC.push_back(temp);
     }
-       
-            
     for (int i = 0; i < rt_assistCurves.size(); i++)
+    {
         for (int j = 0; j < rt_assistCurves[i].size(); j++)
         {
-            trimLtag.push_back(*rt_trimCruves[i][j]);
+            trimLtag.push_back(*rt_assistCurves[i][j]);
             m_assistLD.push_back(*rt_assistCurves[i][j]);
         }
+    }
+       
     UF_VEC3_cross(m_trimVCC[0].a.dir_Center, m_trimVCC[0].b.dir_Center, cutDir);
-
 }
 
