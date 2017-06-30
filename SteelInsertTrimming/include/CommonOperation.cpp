@@ -17,55 +17,6 @@ CommonOperation::CommonOperation(const CommonTraits::Struct_Type& ParmData):Comm
     workPart = theSession->Parts()->Work();
     m_retOffsetSheet = new RetOffsetSheet(sheetsTag,sheetOffsetDist,offsetDeviation,stepoverDeviation,m_isMove, moveDir, sheetMoveDist);
 }
-
-// void CommonOperation::initialParamDST()
-// {
-//     m_extrud = 0;
-//     m_minDist = 0.0;
-//     intervalDist = 0.12;
-// 
-//     step = 0;
-//     m_curvesMoveDist = 0;
-//     m_assistLD.reserve(256);//辅助线不能超过的个数
-//     m_assistLD.clear();
-//     m_trimLD.reserve(512);
-//     m_trimLD.clear();
-//     is_0ffsetColor = false;
-//     CommonTraits::initLocalDST(static_cast<Struct_Type*> (this));//默认局部淬火
-// }
-// 
-// void CommonOperation::initialParamUSTE()
-// {
-//     m_extrud = 0;
-//     m_minDist = 0.0;
-//     intervalDist = 0.0;
-//     step = 0;
-//     m_simplePro.clear();
-// 
-//     m_assistLD.reserve(256);//辅助线不能超过的个数
-//     m_assistLD.clear();
-//     m_trimLD.reserve(512);
-//     m_trimLD.clear();
-// 
-// 
-//     CommonTraits::initEntireUST(static_cast<Struct_Type*> (this));//默认局部淬火
-// }
-// 
-// void CommonOperation::initialParamUSTL()
-// {
-//     m_extrud = 0;
-//     m_minDist = 0.0;
-//     intervalDist = 0.0;
-//     step = 0;
-//     m_simplePro.clear();
-// 
-//     m_assistLD.reserve(256);//辅助线不能超过的个数
-//     m_assistLD.clear();
-//     m_trimLD.reserve(512);
-//     m_trimLD.clear();
-//     CommonTraits::initLocalUST(static_cast<Struct_Type*> (this));//默认局部淬火
-// }
-
 CommonOperation::~CommonOperation()
 {
 }
@@ -808,14 +759,14 @@ void CommonOperation::createDetailUST()
 
 
         }
-        //		UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
-        //		MyFun::resetUpdata();
-        //		UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
+        UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
+        MyFun::resetUpdata();
+        UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
         if (cutShapeBlank)//有符型面
         {
             createShapeBlank(129, 129, 0);
         }
-        //		UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
+        UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
         UF_terminate();
         MyFun::resetUpdata();
     }
