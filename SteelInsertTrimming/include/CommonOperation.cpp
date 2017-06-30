@@ -756,8 +756,6 @@ void CommonOperation::createDetailUST()
                 UF_MODL_ask_feat_body(feat, &m_extrud);
                 MyFun::DeleteParms(1, &m_extrud);
             }
-
-
         }
         UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
         MyFun::resetUpdata();
