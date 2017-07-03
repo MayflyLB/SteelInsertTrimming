@@ -163,130 +163,8 @@
 //#include "atlconv.h"
 #pragma warning(disable:4996)
 
-//头文件
-// #ifdef _WIN64
-// //#include "GrandDog.h"
-// #else
-// //#include "RCGrandDogW32.h"
-// #endif
-
-
 
 #include "windows.h"
-
-//文件使用说明：
-//1、此头文件提供显式调用，PublicFunction.dll与开发产品一起发布
-//2、生成前请将publicFunction.dll放在可搜索到的目录中，如APPLICATION\START\UGII等。
-//3、请将此头文件（PubFun.h）添加到工程中
-
-/*
-0 "基础工具_塑胶模"
-1 "模具设计_塑胶模"
-2 "模具加工_塑胶模"
-3 "制图辅助_塑胶模"
-4 "动态仿真_塑胶模"
-
-5 "基础应用_五金模"
-6 "铸件结构_五金模"
-7 "连续模结构_五金模"
-8 "自动出图_五金模"
-9 "加工辅助_五金模"
-10 "动态仿真_五金模"
-11 "备用"
-*/
-
-
-
-//例:
-/*
-if (getEncodeStatus(1))
-MessageBox(::GetDesktopWindow(), "加密成功！", "测试", MB_OK);
-else
-MessageBox(::GetDesktopWindow(), "加密失败！", "测试", MB_OK);
-*/
-
-//获取当前的加密状态，需运行后台,已加密返回TRUE
-#ifdef UNICODE
-
-#include <tchar.h>
-inline bool getEncodeStatus(int iModuleSn)
-{
-    bool status = false;
-    HINSTANCE hInst = LoadLibrary(_T("PublicFunction.dll"));
-    if (!hInst) return false;
-
-    typedef bool(*ENCODESTATUS)(int iModuleSn);
-    ENCODESTATUS encodeStatus = (ENCODESTATUS)GetProcAddress(hInst, MAKEINTRESOURCEA(1));
-    if (encodeStatus)
-        status = encodeStatus(iModuleSn);
-    FreeLibrary(hInst);
-    return status;
-}
-
-//向后台发送统计信息，发送成功返回TRUE
-//如果本机没安装后台，则把信息直接发往192.168.1.17服务器
-inline bool sendCountData(wchar_t *appName)
-{
-    bool isSendOk = false;
-
-    HINSTANCE hInst = LoadLibrary(_T("PublicFunction.dll"));
-    if (!hInst) return false;
-
-    typedef bool(*SENDDATA)(wchar_t* sendData);
-    SENDDATA sendCount = (SENDDATA)GetProcAddress(hInst, MAKEINTRESOURCEA(2));
-
-    //MessageBox(NULL, MAKEINTRESOURCE(2), MAKEINTRESOURCE(2), MB_OK);
-
-    if (sendCount)
-        isSendOk = sendCount(appName);
-    FreeLibrary(hInst);
-
-    return isSendOk;
-}
-
-#else
-
-inline bool getEncodeStatus(int iModuleSn)
-{
-    bool status = false;
-    HINSTANCE hInst = LoadLibrary("PublicFunction.dll");
-    if (!hInst)
-    {
-        MessageBox(NULL, "Load \"publicFunction.dll\" failed", "Error", MB_OK);
-        return false;
-    }
-
-    typedef bool(*ENCODESTATUS)(int iModuleSn);
-    ENCODESTATUS encodeStatus = (ENCODESTATUS)GetProcAddress(hInst, MAKEINTRESOURCE(1));
-    if (encodeStatus)
-        status = encodeStatus(iModuleSn);
-    FreeLibrary(hInst);
-    return status;
-}
-
-//向后台发送统计信息，发送成功返回TRUE
-//如果本机没安装后台，则把信息直接发往192.168.1.17服务器
-inline bool sendCountData(char *appName)
-{
-    bool isSendOk = false;
-
-    HINSTANCE hInst = LoadLibrary("PublicFunction.dll");
-    if (!hInst) return false;
-
-    typedef bool(*SENDDATA)(char* sendData);
-    SENDDATA sendCount = (SENDDATA)GetProcAddress(hInst, MAKEINTRESOURCE(2));
-
-    //MessageBox(NULL, MAKEINTRESOURCE(2), MAKEINTRESOURCE(2), MB_OK);
-
-    if (sendCount)
-        isSendOk = sendCount(appName);
-    FreeLibrary(hInst);
-
-    return isSendOk;
-}
-
-#endif
-
 
 #define UNDO_SIGNED_BIT 0x7fffffff
 #define UserLimit private:
@@ -591,7 +469,11 @@ namespace MyFun
 	// Par: 		int count_
 	// Ret:   		tag_t
 	//********************************************************************
-	tag_t createPointSetFeat(tag_t curve_, int count_);
+	tag_t createPointSetFeat(tag_t spline, int count_);
+
+
+
+
 	tag_t createFitCureFeat(tag_t pointSetFeat);
 	//********************************************************************
 	// Access:    	::public 

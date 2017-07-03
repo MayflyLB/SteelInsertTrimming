@@ -786,24 +786,22 @@ tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)
     UF_OBJ_ask_type_and_subtype(vcc.a.curve, &type_1, &subType_1);
     extrudeVertex(vcc, true);
 
-    int a = BYTE_4(vcc.vect.size());
-    tag_p_t joinCurve = MyFun::createJoinedCurves(&vcc.vect[0], a);
-    if (a != 1)
+//     int a = BYTE_4(vcc.vect.size());
+//     tag_p_t joinCurve = MyFun::createJoinedCurves(&vcc.vect[0], a);
+//     if (a != 1)
+//     {
+//         delete[] joinCurve;
+//         uc1601("链接曲线出现问题!", 1);
+//     }
+//     joined_curve = joinCurve[0];
+//     delete[] joinCurve;
+    double dist_ = 0;
+    for (int i = 0; i < vcc.vect.size(); i++)
     {
-        joined_curve = joinCurve[0];
-        delete[] joinCurve;
-        UF_DISP_set_highlights(vcc.vect.size(), &vcc.vect[0], 1);
-        uc1601("链接曲线出现问题!", 1);
-    }
-    else
-    {
-        joined_curve = joinCurve[0];
-        delete[] joinCurve;
+        dist_ += MyFun::get_spline_length(vcc.vect[i]);
     }
 
-
-    int count_ = ((int)MyFun::get_spline_length(joined_curve)) / 5;
-
+    int count_ = static_cast<int>(dist_ / 5.0);
     pointSetFeat = MyFun::createPointSetFeat(joined_curve, count_);
     tempfitfeat = MyFun::createFitCureFeat(pointSetFeat);
 
@@ -945,6 +943,10 @@ void CommonOperation::createShapeBlank(int col1, int col2, int flagUD)
             Session::UndoMarkId markId1 = theSession->SetUndoMark(Session::MarkVisibilityVisible, "OffsetSheet");
             tag_t sheet_t = createOffsetSheetEx(tempVCC);
 
+            if (sheet_t==0)
+            {
+                return;
+            }
             vector<tag_t> temp = BooleanOper(m_extrud, sheet_t, tempVCC.vect[0], true, false, false);//现在 m_exturd是切割后的外位置的体
             targetTs.push_back(m_extrud);
             if (temp.size() == 2)
@@ -1215,6 +1217,7 @@ void CommonOperation::getCurvesInfo(const TrimCurveData& info)
         }
         temp.a = *rt_trimCruves[i][0];
         temp.b = *rt_trimCruves[i].back();
+        temp.a.swap();
         m_trimVCC.push_back(temp);
     }
     for (int i = 0; i < rt_assistCurves.size(); i++)
@@ -1225,7 +1228,6 @@ void CommonOperation::getCurvesInfo(const TrimCurveData& info)
             m_assistLD.push_back(*rt_assistCurves[i][j]);
         }
     }
-       
     UF_VEC3_cross(m_trimVCC[0].a.dir_Center, m_trimVCC[0].b.dir_Center, cutDir);
 }
 

@@ -154,15 +154,13 @@ size_t CurveAttrE::getAllTrimCurves()
         UF_OBJ_ask_type_and_subtype(obj, &type, &subtype);
         if (type == UF_line_type ||type == UF_circle_type)
         {
-            UF_ATTR_find_attribute(obj, UF_ATTR_string, const_cast<char*>(curveTypeTitle), &subtype);
-            if (UF_ATTR_string == subtype)
+            if (isSpecifyCurve(obj))
             {
                 UF_CALL(UF_ATTR_read_value(obj, const_cast<char*>(curveTypeTitle), UF_ATTR_string, &uavt));
                 if (strncmp(uavt.value.string,AngType,5)!=0)    m_tempCurves.push_back(obj);
                 if (uavt.value.string)  UF_free(uavt.value.string);
                 memset(&uavt, 0, sizeof(UF_ATTR_value_t));
             }
-                
         }
         UF_VIEW_cycle_objects(0, UF_VIEW_VISIBLE_OBJECTS, &obj);
     }

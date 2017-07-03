@@ -326,16 +326,19 @@ public:     //对象关系
         }
     }
 
-
     operator void*()
     {
         return this;
     }
-    operator tag_t()
+
+    operator tag_t() 
     {
         return this->curve;
     }
-
+    operator tag_t()const 
+    {
+        return this->curve;
+    }
 
 public: //原子重建
 
@@ -400,13 +403,10 @@ public:
 
 struct vccdata
 {
-    CurveData a;
+    CurveData a; //方向指向定点方向.
     CurveData b;
     vector<tag_t> vect;
 };
-
-
-
 
 extern char szTrim[];
 extern char szAssist[];
@@ -432,9 +432,6 @@ extern char szAssist[];
 #define INIT_ABS_CSYS()     SetAbsSys()         //UI类中放置在构造里
 #define TERM_ABS_CSYS()     SetOrgSys()         //UI类中放置在析构里
 /*********************************************************************************/
-
-
-
 //********************************************************************
 // Access:    	::public 
 // Description: 求碰点最小距离,并矫正映射方向
@@ -444,8 +441,6 @@ extern char szAssist[];
 // Ret:   		double
 //********************************************************************
 double measureMinDimensionBCS(const vector<CurveData>& cdPt, tag_t sheet, double *projectDir);
-
-
 //********************************************************************
 // Access:    	::public 
 // Description: 求一个对象和一群对象之间的最小距离,返回最小距离的对象群里的对象
@@ -475,7 +470,6 @@ double MaxDimension(tag_t obj_, vector<tag_t> tagertObj, tag_t& retBody, double 
 //********************************************************************
 int is_invisible_of(tag_t obj);
 
-
 //********************************************************************
 // Access:    	::public 
 // Description: 取出显示部件中的所有片体和片体的个数;
@@ -485,8 +479,6 @@ int is_invisible_of(tag_t obj);
 size_t getAllSheets(vector<tag_t> & targetTag,const char*sheetName=NULL);
 
 int  setBodyColor(tag_t obj, int col_1, int col_2);
-
-
 //********************************************************************
 // Access:    	::public 
 // Description: 此处异常不用补获,调用者补获 默认创建体不是片体(有加粗功能.)
@@ -501,8 +493,6 @@ int  setBodyColor(tag_t obj, int col_1, int col_2);
 //********************************************************************
 tag_t extrudorEx(std::vector<tag_t> curves, CurveData dirt, double *dir,
     double startVertical, double endVertical, double startOffset, double endOffset);
-
-
 //********************************************************************
 // Access:    	::public 
 // Description: 拉伸片体
@@ -524,9 +514,6 @@ tag_t createSheet(const std::vector<tag_t>& curves, CurveData& dirt, double *dir
 // Ret:   		tag_t feat;
 //********************************************************************
 tag_t  offsetFaceSheet(vector<tag_t>sheetfaces, double dist, bool flags);
-
-
-
 
 //********************************************************************
 // Access:    	::public 
@@ -676,7 +663,110 @@ int findAttr(tag_t obj, char * title, int type/*= UF_ATTR_string*/);
 bool is_3DCurve(const vector<tag_t> &curves, double *dir3=NULL);//spline不在一个平面上极为3d
 
 
+inline tag_t createPointSetFeat(const vector<tag_t>& curves, int count_)
+{
+    Session *theSession = Session::GetSession();
+    Part *workPart(theSession->Parts()->Work());
 
+    Features::PointSet *nullFeatures_PointSet(NULL);
+    if (!workPart->Preferences()->Modeling()->GetHistoryMode())
+    {
+        throw NXException::Create("Create or edit of a Feature was recorded in History Mode but playback is in History-Free Mode.");
+    }
+
+    Features::PointSetBuilder *pointSetBuilder1 = workPart->Features()->CreatePointSetBuilder(nullFeatures_PointSet);
+    pointSetBuilder1->StartPercentage()->SetRightHandSide("0");
+    pointSetBuilder1->EndPercentage()->SetRightHandSide("100");
+    pointSetBuilder1->Ratio()->SetRightHandSide("1");
+    pointSetBuilder1->ChordalTolerance()->SetRightHandSide("1");
+    pointSetBuilder1->ArcLength()->SetRightHandSide("1");
+
+    pointSetBuilder1->NumberOfPointsInUDirectionExpression()->SetRightHandSide("10");
+    pointSetBuilder1->NumberOfPointsInVDirectionExpression()->SetRightHandSide("10");
+    pointSetBuilder1->SetPatternLimitsBy(Features::PointSetBuilder::PatternLimitsTypePercentages);
+
+    pointSetBuilder1->PatternLimitsStartingUValue()->SetRightHandSide("0");
+    pointSetBuilder1->PatternLimitsEndingUValue()->SetRightHandSide("100");
+
+    pointSetBuilder1->PatternLimitsStartingVValue()->SetRightHandSide("0");
+    pointSetBuilder1->PatternLimitsEndingVValue()->SetRightHandSide("100");
+
+    Unit *nullUnit(NULL);
+    Expression *expression1;
+    expression1 = workPart->Expressions()->CreateSystemExpressionWithUnits("50", nullUnit);
+
+    pointSetBuilder1->CurvePercentageList()->Append(expression1);
+
+    Features::PointSetFacePercentageBuilder *pointSetFacePercentageBuilder1 = pointSetBuilder1->CreateFacePercentageListItem();
+    pointSetBuilder1->FacePercentageList()->Append(pointSetFacePercentageBuilder1);
+    expression1->SetRightHandSide("0");
+    pointSetFacePercentageBuilder1->UPercentage()->SetRightHandSide("0");
+    pointSetFacePercentageBuilder1->VPercentage()->SetRightHandSide("0");
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetDistanceTolerance(0.001);
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetChainingTolerance(0.00095);
+
+
+    pointSetBuilder1->MultipleCurveOrEdgeCollector()->SetChainingTolerance(0.00095);
+    pointSetBuilder1->MultipleCurveOrEdgeCollector()->SetAngleTolerance(0.05);
+
+    pointSetBuilder1->StartPercentageSection()->SetDistanceTolerance(0.001);
+    pointSetBuilder1->StartPercentageSection()->SetChainingTolerance(0.00095);
+    pointSetBuilder1->StartPercentageSection()->SetAngleTolerance(0.05);
+
+    pointSetBuilder1->EndPercentageSection()->SetDistanceTolerance(0.001);
+    pointSetBuilder1->EndPercentageSection()->SetChainingTolerance(0.00095);
+    pointSetBuilder1->EndPercentageSection()->SetAngleTolerance(0.05);
+
+    pointSetBuilder1->IntersectionSection()->SetDistanceTolerance(0.001);
+    pointSetBuilder1->IntersectionSection()->SetChainingTolerance(0.00095);
+    pointSetBuilder1->IntersectionSection()->SetAngleTolerance(0.05);
+
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetAngleTolerance(0.05);
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetAllowedEntityTypes(Section::AllowTypesOnlyCurves);
+
+    std::vector<IBaseCurve *> curves1(curves.size());
+    Line* line; 
+    NXOpen::Arc* arc;
+    int type_;
+    int subType_;
+    UF_INITIALIZE();
+    for (int i = 0; i < curves.size(); i++)
+    {
+        UF_OBJ_ask_type_and_subtype(curves[i],&type_,&subType_);
+        if (type_ == UF_line_type)
+        {
+            line = (Line*)(NXOpen::NXObjectManager::Get(curves[i]));
+            curves1[i] = line;
+        }
+        else if (type_ == UF_line_type)
+        {
+            arc = (NXOpen::Arc*)(NXOpen::NXObjectManager::Get(curves[i]));
+            curves1[i] = arc;
+        }
+        else
+        {
+            SHOW_INFO_USR("创建点集异常(包含非直线圆弧的曲线类型)!");
+        }
+    }
+    CurveDumbRule *curveDumbRule1;
+    curveDumbRule1 = workPart->ScRuleFactory()->CreateRuleBaseCurveDumb(curves1);
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->AllowSelfIntersection(true);
+
+    std::vector<SelectionIntentRule *> rules1(1);
+    rules1[0] = curveDumbRule1;
+    NXObject *nullNXObject(NULL);
+    Point3d helpPoint1(2331.34369734255, 505.746802068877, 70.0);
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->AddToSection(rules1, line, nullNXObject, nullNXObject, helpPoint1, Section::ModeCreate, false);
+    pointSetBuilder1->SetCurvePointsBy(Features::PointSetBuilder::CurvePointsTypeEqualArcLength);
+
+    char buf[8] = { 0 };
+    sprintf(buf, "%d", count_);
+    pointSetBuilder1->NumberOfPointsExpression()->SetRightHandSide(buf);
+    NXObject *nXObject1 = pointSetBuilder1->Commit();
+    pointSetBuilder1->Destroy();
+
+    return nXObject1->Tag();
+}
 
 
 #endif

@@ -94,6 +94,22 @@ private:
     void getValue();
 
     void getAllTrimCurves();
+    void filterCurves()
+    {
+        std::vector<NXOpen::TaggedObject *>&&temp=curvesSelect->GetSelectedObjects();
+        CurveAttrE curveAttre;
+        std::vector<NXOpen::TaggedObject *>::iterator iter;
+        for (iter=temp.begin();iter!=temp.end();)
+        {
+            if (!curveAttre.isSpecifyCurve((*iter)->GetTag()))
+                temp.erase(iter);
+            else
+                iter++;
+        }
+        curvesSelect->SetSelectedObjects(temp);
+    }
+
+
 
     CommonOperation* retOper();
     void generateOper()
@@ -130,9 +146,5 @@ private:
     NXOpen::BlockStyler::DoubleBlock* cutDirToolBlankUI;// Block type: Double
     NXOpen::BlockStyler::DoubleBlock* cutShapeWideUI;// Block type: Double
     NXOpen::BlockStyler::DoubleBlock* cutShapeBlankUI;// Block type: Double
-
-    
-   
-
 };
 #endif //UPPERSTEELINSERTTRIMMING_H_INCLUDED

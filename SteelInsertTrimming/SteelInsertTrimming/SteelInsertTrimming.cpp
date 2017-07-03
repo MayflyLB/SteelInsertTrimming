@@ -151,9 +151,7 @@ int SteelInsertTrimming::update_cb(NXOpen::BlockStyler::UIBlock* block)
         }
         else if (block == curvesSelect)
         {
-            getValue();
-            RetOffsetSheet temp(sheetsTag, sheetOffsetDist,offsetDeviation,stepoverDeviation,m_isMove,moveDir, sheetMoveDist);
-            temp.retOffsetSheet(sheetOffsetDist,moveDir,sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
+            filterCurves();
         }
         else if (block == modlTypeUI)
         {

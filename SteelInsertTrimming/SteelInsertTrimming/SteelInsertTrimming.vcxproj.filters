@@ -4,9 +4,6 @@
     <ClCompile Include="..\include\CommonOperation.cpp">
       <Filter>include</Filter>
     </ClCompile>
-    <ClCompile Include="..\include\assistFun.cpp">
-      <Filter>include</Filter>
-    </ClCompile>
     <ClCompile Include="SteelInsertTrimming.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -17,6 +14,9 @@
       <Filter>include</Filter>
     </ClCompile>
     <ClCompile Include="..\include\RetOffsetSheet.cpp">
+      <Filter>include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\assistFun.cpp">
       <Filter>include</Filter>
     </ClCompile>
   </ItemGroup>
@@ -30,9 +30,6 @@
     <ClInclude Include="..\include\CommonOperation.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\assistFun.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="SteelInsertTrimming.hpp">
       <Filter>源文件</Filter>
     </ClInclude>
@@ -40,6 +37,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\CurveAttrE.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\assistFun.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

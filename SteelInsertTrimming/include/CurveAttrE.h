@@ -56,15 +56,25 @@ public:
         getCurrentTrimCurves(temp);
         getAtrrToCurves();
     }
+    inline bool isSpecifyCurve(tag_t obj)
+    {
+        return hasTheAttr(obj, curveTypeTitle, UF_ATTR_string);
+    }
 
 private:
-
+    inline bool hasTheAttr(tag_t obj, const char*TypeTitle,int type_)
+    {
+        int ret;
+        UF_ATTR_find_attribute(obj, type_, const_cast<char*>(curveTypeTitle), &ret);
+        return type_ == ret;
+    }
     inline void getCurrentTrimCurves(const vector<NXOpen::TaggedObject *>&temp)
     {
         m_tempCurves.clear();
         for (int i=0;i<temp.size();i++)
             m_tempCurves.push_back(temp[i]->GetTag());
     }
+
     size_t getAllTrimCurves();
     void getAtrrToCurves();
     void delelteCurveData();

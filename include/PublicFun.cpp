@@ -1141,9 +1141,8 @@ namespace MyFun
         tag_t* joined_curve = new tag_t[counts];
         for (int i = 0; i < counts; i++)
             joined_curve[i] = null_tag;
-        UF_initialize();
+        UF_INITIALIZE();
         UF_CALL(UF_CURVE_auto_join_curves(pCurves, UNDO_SIGNED_BIT&counts, 2, joined_curve, &counts));
-        UF_TERMINATE();
         return joined_curve;
     }
 
@@ -1221,7 +1220,7 @@ namespace MyFun
         return spline_length;
     }
 
-    tag_t createPointSetFeat(tag_t curve_, int count_)
+    tag_t createPointSetFeat(tag_t spline, int count_)
     {
         Session *theSession = Session::GetSession();
         Part *workPart(theSession->Parts()->Work());
@@ -1284,7 +1283,7 @@ namespace MyFun
 
         std::vector<IBaseCurve *> curves1(1);
 
-        Spline *spline1 = (Spline *)(NXOpen::NXObjectManager::Get(curve_));
+        Spline *spline1 = (Spline *)(NXOpen::NXObjectManager::Get(spline));
 
         curves1[0] = spline1;
         CurveDumbRule *curveDumbRule1;
