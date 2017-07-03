@@ -667,64 +667,65 @@ inline tag_t createPointSetFeat(const vector<tag_t>& curves, int count_)
 {
     Session *theSession = Session::GetSession();
     Part *workPart(theSession->Parts()->Work());
+    Part *displayPart(theSession->Parts()->Display());
+    // ----------------------------------------------
+    //   Menu: Insert->Datum/Point->Point Set...
+    // ----------------------------------------------
 
     Features::PointSet *nullFeatures_PointSet(NULL);
+
     if (!workPart->Preferences()->Modeling()->GetHistoryMode())
     {
         throw NXException::Create("Create or edit of a Feature was recorded in History Mode but playback is in History-Free Mode.");
     }
 
     Features::PointSetBuilder *pointSetBuilder1 = workPart->Features()->CreatePointSetBuilder(nullFeatures_PointSet);
+    char buf[8] = { 0 };
+    sprintf(buf, "%d", count_);
+    pointSetBuilder1->NumberOfPointsExpression()->SetRightHandSide(buf);
     pointSetBuilder1->StartPercentage()->SetRightHandSide("0");
     pointSetBuilder1->EndPercentage()->SetRightHandSide("100");
     pointSetBuilder1->Ratio()->SetRightHandSide("1");
-    pointSetBuilder1->ChordalTolerance()->SetRightHandSide("1");
+    pointSetBuilder1->ChordalTolerance()->SetRightHandSide("2.54");
     pointSetBuilder1->ArcLength()->SetRightHandSide("1");
-
     pointSetBuilder1->NumberOfPointsInUDirectionExpression()->SetRightHandSide("10");
     pointSetBuilder1->NumberOfPointsInVDirectionExpression()->SetRightHandSide("10");
     pointSetBuilder1->SetPatternLimitsBy(Features::PointSetBuilder::PatternLimitsTypePercentages);
-
     pointSetBuilder1->PatternLimitsStartingUValue()->SetRightHandSide("0");
     pointSetBuilder1->PatternLimitsEndingUValue()->SetRightHandSide("100");
-
     pointSetBuilder1->PatternLimitsStartingVValue()->SetRightHandSide("0");
     pointSetBuilder1->PatternLimitsEndingVValue()->SetRightHandSide("100");
 
     Unit *nullUnit(NULL);
     Expression *expression1;
     expression1 = workPart->Expressions()->CreateSystemExpressionWithUnits("50", nullUnit);
-
     pointSetBuilder1->CurvePercentageList()->Append(expression1);
-
-    Features::PointSetFacePercentageBuilder *pointSetFacePercentageBuilder1 = pointSetBuilder1->CreateFacePercentageListItem();
+    Features::PointSetFacePercentageBuilder *pointSetFacePercentageBuilder1;
+    pointSetFacePercentageBuilder1 = pointSetBuilder1->CreateFacePercentageListItem();
     pointSetBuilder1->FacePercentageList()->Append(pointSetFacePercentageBuilder1);
     expression1->SetRightHandSide("0");
+
     pointSetFacePercentageBuilder1->UPercentage()->SetRightHandSide("0");
     pointSetFacePercentageBuilder1->VPercentage()->SetRightHandSide("0");
-    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetDistanceTolerance(0.001);
-    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetChainingTolerance(0.00095);
-
-
-    pointSetBuilder1->MultipleCurveOrEdgeCollector()->SetChainingTolerance(0.00095);
-    pointSetBuilder1->MultipleCurveOrEdgeCollector()->SetAngleTolerance(0.05);
-
-    pointSetBuilder1->StartPercentageSection()->SetDistanceTolerance(0.001);
-    pointSetBuilder1->StartPercentageSection()->SetChainingTolerance(0.00095);
-    pointSetBuilder1->StartPercentageSection()->SetAngleTolerance(0.05);
-
-    pointSetBuilder1->EndPercentageSection()->SetDistanceTolerance(0.001);
-    pointSetBuilder1->EndPercentageSection()->SetChainingTolerance(0.00095);
-    pointSetBuilder1->EndPercentageSection()->SetAngleTolerance(0.05);
-
-    pointSetBuilder1->IntersectionSection()->SetDistanceTolerance(0.001);
-    pointSetBuilder1->IntersectionSection()->SetChainingTolerance(0.00095);
-    pointSetBuilder1->IntersectionSection()->SetAngleTolerance(0.05);
-
-    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetAngleTolerance(0.05);
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetDistanceTolerance(0.0254);
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetChainingTolerance(0.02413);
+    pointSetBuilder1->MultipleCurveOrEdgeCollector()->SetDistanceTolerance(0.0254);
+    pointSetBuilder1->MultipleCurveOrEdgeCollector()->SetChainingTolerance(0.02413);
+    pointSetBuilder1->StartPercentageSection()->SetDistanceTolerance(0.0254);
+    pointSetBuilder1->StartPercentageSection()->SetChainingTolerance(0.02413);
+    pointSetBuilder1->EndPercentageSection()->SetDistanceTolerance(0.0254);
+    pointSetBuilder1->EndPercentageSection()->SetChainingTolerance(0.02413);
+    pointSetBuilder1->IntersectionSection()->SetDistanceTolerance(0.0254);
+    pointSetBuilder1->IntersectionSection()->SetChainingTolerance(0.02413);
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->SetAngleTolerance(0.5);
+    pointSetBuilder1->MultipleCurveOrEdgeCollector()->SetAngleTolerance(0.5);
+    pointSetBuilder1->StartPercentageSection()->SetAngleTolerance(0.5);
+    pointSetBuilder1->EndPercentageSection()->SetAngleTolerance(0.5);
+    pointSetBuilder1->IntersectionSection()->SetAngleTolerance(0.5);
     pointSetBuilder1->SingleCurveOrEdgeCollector()->SetAllowedEntityTypes(Section::AllowTypesOnlyCurves);
 
-    std::vector<IBaseCurve *> curves1(curves.size());
+    std::vector<IBaseCurve *> curves1;
+    std::vector<IBaseCurve *> curves2;
     Line* line; 
     NXOpen::Arc* arc;
     int type_;
@@ -736,32 +737,32 @@ inline tag_t createPointSetFeat(const vector<tag_t>& curves, int count_)
         if (type_ == UF_line_type)
         {
             line = (Line*)(NXOpen::NXObjectManager::Get(curves[i]));
-            curves1[i] = line;
+            curves1.push_back(line) ;
         }
-        else if (type_ == UF_line_type)
+        else if (type_ == UF_circle_type)
         {
             arc = (NXOpen::Arc*)(NXOpen::NXObjectManager::Get(curves[i]));
-            curves1[i] = arc;
+            curves2.push_back(arc) ;
         }
         else
         {
             SHOW_INFO_USR("创建点集异常(包含非直线圆弧的曲线类型)!");
         }
     }
-    CurveDumbRule *curveDumbRule1;
-    curveDumbRule1 = workPart->ScRuleFactory()->CreateRuleBaseCurveDumb(curves1);
+    CurveDumbRule *curveDumbRule1 = workPart->ScRuleFactory()->CreateRuleBaseCurveDumb(curves1);
+    CurveDumbRule *curveDumbRule2= workPart->ScRuleFactory()->CreateRuleBaseCurveDumb(curves2);
     pointSetBuilder1->SingleCurveOrEdgeCollector()->AllowSelfIntersection(true);
+    std::vector<SelectionIntentRule *> rules1;
+    rules1.push_back(curveDumbRule1);
+    rules1.push_back(curveDumbRule2);
 
-    std::vector<SelectionIntentRule *> rules1(1);
-    rules1[0] = curveDumbRule1;
     NXObject *nullNXObject(NULL);
-    Point3d helpPoint1(2331.34369734255, 505.746802068877, 70.0);
+    double pt[3];
+    MyFun::getCurvePt(curves[0], 0, pt);
+    Point3d helpPoint1(pt);
     pointSetBuilder1->SingleCurveOrEdgeCollector()->AddToSection(rules1, line, nullNXObject, nullNXObject, helpPoint1, Section::ModeCreate, false);
     pointSetBuilder1->SetCurvePointsBy(Features::PointSetBuilder::CurvePointsTypeEqualArcLength);
 
-    char buf[8] = { 0 };
-    sprintf(buf, "%d", count_);
-    pointSetBuilder1->NumberOfPointsExpression()->SetRightHandSide(buf);
     NXObject *nXObject1 = pointSetBuilder1->Commit();
     pointSetBuilder1->Destroy();
 

@@ -773,7 +773,7 @@ tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)
     tag_t tempOffsetCurve = 0;
 
     UF_initialize();
-    UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
+   // UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
 
     CurveData aa;
     tag_t tempSheet = 0;
@@ -786,15 +786,6 @@ tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)
     UF_OBJ_ask_type_and_subtype(vcc.a.curve, &type_1, &subType_1);
     extrudeVertex(vcc, true);
 
-//     int a = BYTE_4(vcc.vect.size());
-//     tag_p_t joinCurve = MyFun::createJoinedCurves(&vcc.vect[0], a);
-//     if (a != 1)
-//     {
-//         delete[] joinCurve;
-//         uc1601("链接曲线出现问题!", 1);
-//     }
-//     joined_curve = joinCurve[0];
-//     delete[] joinCurve;
     double dist_ = 0;
     for (int i = 0; i < vcc.vect.size(); i++)
     {
@@ -802,9 +793,8 @@ tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)
     }
 
     int count_ = static_cast<int>(dist_ / 5.0);
-    pointSetFeat = MyFun::createPointSetFeat(joined_curve, count_);
+    pointSetFeat = createPointSetFeat(vcc.vect, count_);
     tempfitfeat = MyFun::createFitCureFeat(pointSetFeat);
-
     UF_CURVE_line_t line_coords = { 0 };
 
     if (vcc.a.curve != vcc.b.curve || type_1 != UF_line_type)
@@ -820,9 +810,8 @@ tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)
         MyFun::getDirectionPos(dir, line_coords.start_point, cutShapeWide*1.5, line_coords.start_point);
         MyFun::getDirectionPos(dir, line_coords.end_point, cutShapeWide*1.5, line_coords.end_point);
         UF_CURVE_edit_line_data(vcc.vect[0], &line_coords);
-        tempOffsetCurve = vcc.vect[0];//////注意这里使用的是原辅助线或者修边线
+        tempOffsetCurve = vcc.vect[0];//注意这里使用的是原辅助线或者修边线
     }
-
     aa.curve = tempOffsetCurve;
     aa.SetData();
     tempSheet = createSheet(vector<tag_t>(1, tempOffsetCurve), aa,
@@ -873,7 +862,7 @@ tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)
         DELETE_OBJ(tempOffsetCurve);
     DELETE_OBJ(joined_curve);
     extrudeVertex(vcc, false);
-    UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
+  //  UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
     for (int i = 0; i < curves__.size(); i++)
         DELETE_OBJ(curves__[i]);
     return tempSheet;
