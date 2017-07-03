@@ -718,8 +718,10 @@ void CommonOperation::createDetailDST()
         }
         UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
         MyFun::resetUpdata();
+       
         UF_terminate();
-    }
+    } 
+    m_extrud = 0;
 }
 
 void CommonOperation::createDetailUST()
@@ -762,6 +764,7 @@ void CommonOperation::createDetailUST()
         UF_terminate();
         MyFun::resetUpdata();
     }
+    m_extrud = 0;
 }
 
 tag_t CommonOperation::createOffsetSheetEx(vccdata vcc)

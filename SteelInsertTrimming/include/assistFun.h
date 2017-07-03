@@ -749,12 +749,21 @@ inline tag_t createPointSetFeat(const vector<tag_t>& curves, int count_)
             SHOW_INFO_USR("创建点集异常(包含非直线圆弧的曲线类型)!");
         }
     }
-    CurveDumbRule *curveDumbRule1 = workPart->ScRuleFactory()->CreateRuleBaseCurveDumb(curves1);
-    CurveDumbRule *curveDumbRule2= workPart->ScRuleFactory()->CreateRuleBaseCurveDumb(curves2);
-    pointSetBuilder1->SingleCurveOrEdgeCollector()->AllowSelfIntersection(true);
+    CurveDumbRule *curveDumbRule1;
+    CurveDumbRule *curveDumbRule2;
     std::vector<SelectionIntentRule *> rules1;
-    rules1.push_back(curveDumbRule1);
-    rules1.push_back(curveDumbRule2);
+    if (curves1.size())
+    {
+        curveDumbRule1 = workPart->ScRuleFactory()->CreateRuleBaseCurveDumb(curves1);
+        rules1.push_back(curveDumbRule1);
+    }
+    if (curves2.size())
+    {
+        curveDumbRule2 = workPart->ScRuleFactory()->CreateRuleBaseCurveDumb(curves2);
+        rules1.push_back(curveDumbRule2);
+    }
+    pointSetBuilder1->SingleCurveOrEdgeCollector()->AllowSelfIntersection(true);
+    
 
     NXObject *nullNXObject(NULL);
     double pt[3];
