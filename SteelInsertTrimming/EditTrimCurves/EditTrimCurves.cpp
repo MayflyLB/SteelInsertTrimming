@@ -170,7 +170,7 @@ void EditTrimCurves::simplifySpline()
     sortCurvesPointor(m_pTrimCurves, m_trimCurvesGroupUP);
     ArcTranslateLine(m_trimCurvesGroupUP);
     stdProcessCurves(m_trimCurvesGroupUP);
-    stdProcessCurves(m_trimCurvesGroupUP);
+    stdProcessCurves(m_trimCurvesGroupUP);////////////////////
 
     m_allTrimCurves.clear();
     for (int i = 0; i < m_trimCurvesGroupUP.size(); i++)
@@ -260,7 +260,7 @@ void EditTrimCurves::GenerateAssistLines()
     deletePointerSet(m_assistCurvesTempGroup);
     TrimCurveData tcd = { 0 };
     int count_;
-    int index_= m_trimCurvesGroupUP.size();
+    int index_= BYTE_4(m_trimCurvesGroupUP.size());
     for (int i = 0; i < m_trimCurvesGroupUP.size(); i++)//иодё
     {
         index_ = BYTE_4(m_pAssistCurves.size());
