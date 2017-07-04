@@ -629,13 +629,13 @@ void CommonOperation::createBodyDST()
     tag_t temp = 0;
     tag_t feat = 0;
 
-    for (int i = 0; i < m_trimVCC.size() && intervalDist>0; i++)
-    {
-        temp = createExtrudeBodyEx(m_trimVCC[i], intervalDist);
-        UF_MODL_subtract_bodies_with_retained_options(m_extrud, temp, false, false, &feat);
-        UF_MODL_ask_feat_body(feat, &m_extrud);
-        MyFun::DeleteParms(1, &m_extrud);
-    }
+//     for (int i = 0; i < m_trimVCC.size() && intervalDist>0; i++)
+//     {
+//         temp = createExtrudeBodyEx(m_trimVCC[i], intervalDist);
+//         UF_MODL_subtract_bodies_with_retained_options(m_extrud, temp, false, false, &feat);
+//         UF_MODL_ask_feat_body(feat, &m_extrud);
+//         MyFun::DeleteParms(1, &m_extrud);
+//     }
     setBodyColor(m_extrud, col[0], col[1]);	//COL确定修编刀口侧面颜色6以及内部体的颜色129
     UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
 
@@ -697,7 +697,7 @@ void CommonOperation::createDetailDST()
             sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist - cutDirCutLen,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
             for (int i = 0; i < m_trimVCC.size(); i++)
             {
-                tag_t temp = createExtrudeBodyEx(m_trimVCC[i], intervalDist + cutDirToolBlank);
+                tag_t temp = createExtrudeBodyEx(m_trimVCC[i], /*intervalDist +*/ cutDirToolBlank);
                 BooleanOperUDC_ST(temp, m_trimVCC[0].a, sheetTag);
                 tag_t feat = 0;
                 UF_MODL_subtract_bodies_with_retained_options(m_extrud, temp, false, false, &feat);
@@ -1101,23 +1101,6 @@ void CommonOperation::splinesProcessToLinesDUST(vector<tag_t> &tempSplines) //刚
     tempSplines = tempVVV;
 }
 
-void CommonOperation::createToolBlank()
-{
-    if (cutDirToolBlank)//刀口避让 
-    {
-        sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist - cutDirCutLen, moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
-        for (int i = 0; i < m_trimVCC.size(); i++)
-        {
-            vccdata tempVcc = m_trimVCC[i];
-            UF_INITIALIZE();
-            UF_CALL(UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY));
-            tag_t temp = createExtrudeBodyEx(tempVcc, intervalDist + cutDirToolBlank, intervalDist + cutDirToolBlank);
-            BooleanOper(temp, sheetTag, m_trimVCC[0].a);
-            setBodyColor(temp, 129, 129);//布尔后和工具体一个颜色
-            m_tempBody.push_back(temp);
-        }
-    }
-}
 
 void CommonOperation::filterZFace(vector<tag_t>&faces)
 {

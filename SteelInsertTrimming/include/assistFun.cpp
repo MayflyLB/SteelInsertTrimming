@@ -1344,7 +1344,9 @@ void stdProcessCurves(vector<vector<CurveData*>>&temp_)
                                 {
                                     temp_[i].erase(it_end);
                                 }
-                                    
+                                (*it_start)->SetData();
+                                if (MyFun::is_Equal((*it_end)->start_point, (*it_start)->start_point, 0.001))
+                                    (*it_start)->swap();
                                 it++;
 
                             }
@@ -1373,8 +1375,10 @@ void stdProcessCurves(vector<vector<CurveData*>>&temp_)
                         {
                             temp_[i].erase(it_end);
                         }
+                        (*it_start)->SetData();
+                        if (MyFun::is_Equal((*it_end)->start_point,(*it_start)->start_point,0.001))
+                            (*it_start)->swap();
                         it++;
-
                     }
                     count_2 = 1;
                     it_start = it;
@@ -1453,6 +1457,9 @@ void stdProcessCurves(vector<vector<CurveData*>>&temp_)
                                 {
                                     temp_[i].erase(it_end);
                                 }
+                                (*it_start)->SetData();
+                                if (MyFun::is_Equal((*it_end)->start_point, (*it_start)->start_point, 0.001))
+                                    (*it_start)->swap();
                                 it++;
 
                             }
@@ -1481,6 +1488,9 @@ void stdProcessCurves(vector<vector<CurveData*>>&temp_)
                         {
                             temp_[i].erase(it_end);
                         }
+                        (*it_start)->SetData();
+                        if (MyFun::is_Equal((*it_end)->start_point, (*it_start)->start_point, 0.001))
+                            (*it_start)->swap();
                         it++;
 
                     }
@@ -2569,10 +2579,26 @@ bool is_3DCurve(const vector<tag_t> &curves, double *dir3) //spline²»ÔÚÒ»¸öÆ½ÃæÉ
 
 void autoCloseAssistCurves(vector<CurveData*>& trimCurves, double *dir, double width, vector<CurveData*>& assistLD,int &count_, int flag_type /*= 1*/)
 {
+    UF_INITIALIZE();
     if (MyFun::is_Equal(trimCurves[0]->start_point, trimCurves.back()->end_point, 0.001))
     {
         count_ = 0;
-        SHOW_INFO_USR("ÐÞ±ßÏß±ÕºÏ£¬Ä¿Ç°²»Ö§³ÖÖØÍ·ÏÂÄ£Éú³É");
+        char buf[128] = {0};
+        for (int i = 0; i < trimCurves.size(); i++)
+        {
+            if (UF_OBJ_ask_status(*trimCurves[i]) == UF_OBJ_DELETED)
+            {
+                sprintf_s(buf, "%d is not exist!\n", trimCurves[i]->curve);
+                SHOW_INFO_USR(buf);
+            }
+            else
+            {
+                sprintf_s(buf, "%d is close!\n", trimCurves[i]->curve);
+                SHOW_INFO_USR(buf);
+                return;
+            }
+        }
+
         return;
     }
     trimCurves[0]->swap();

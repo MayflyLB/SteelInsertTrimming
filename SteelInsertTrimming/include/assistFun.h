@@ -330,7 +330,10 @@ public:     //对象关系
     {
         return this;
     }
-
+    operator int()
+    {
+        return this->curve;
+    }
     operator tag_t() 
     {
         return this->curve;

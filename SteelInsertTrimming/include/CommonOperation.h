@@ -36,7 +36,6 @@ private:
         }
         return;
     }
-
     void creataUST(const vector<TrimCurveData> &m_CurveDataUp)
     {
         for (int i = 0; i < m_CurveDataUp.size(); i++)
@@ -47,9 +46,7 @@ private:
         }
         return;
     }
-
     void getCurvesInfo(const TrimCurveData& info);
-
     void createBodyDST();
     void createBodyUST();
 
@@ -73,14 +70,7 @@ private:
 
     vector<tag_t> BooleanOperUDC_ST(tag_t& extrud, tag_t flagT, tag_t sheetsSet, bool flag = true, bool isSetEx = false);
 
-    //偏置用于创建付型面 避让的片体
-    //tag_t createOffsetSheet( vccdata vcc, bool flag = true);
-
     tag_t createOffsetSheetEx(vccdata vcc);
-
-
-    //创建梯度
-    void createToolBlank();
 
     //过滤出法向和z轴负方向成角度小于90度的面
     void filterZFace(vector<tag_t>&faces);
