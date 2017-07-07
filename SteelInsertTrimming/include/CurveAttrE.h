@@ -23,7 +23,6 @@ public:
     }
     void writeAttrToCurves(std::vector<TrimCurveData>& curveSet, CurveType cae);
 
-   
     const vector<TrimCurveData>& retUpCurveData()const 
     {
         return m_CurveDataUp;
@@ -44,7 +43,7 @@ public:
         return m_CurveDataDw;
     }
     //处理完成 做旧
-    void writeOld(std::vector<TrimCurveData>& curveSet);
+
 
     inline void getTrimCurves()
     {
@@ -60,8 +59,17 @@ public:
     {
         return hasTheAttr(obj, curveTypeTitle, UF_ATTR_string);
     }
+    inline void readTrimCurves()
+    {
 
+    }
+    void writeOld()const
+    {
+        writeOld(m_CurveDataUp);
+        writeOld(m_CurveDataDw);
+    }
 private:
+    void writeOld(std::vector<TrimCurveData>& curveSet)const;
     inline bool hasTheAttr(tag_t obj, const char*TypeTitle,int type_)
     {
         int ret;
@@ -79,8 +87,8 @@ private:
     void getAtrrToCurves();
     void delelteCurveData();
 private:
-    vector<TrimCurveData> m_CurveDataUp;//一级指针有内容！！！
-    vector<TrimCurveData> m_CurveDataDw;//一级指针有内容！！！
+    mutable vector<TrimCurveData> m_CurveDataUp;//一级指针有内容！！！
+    mutable vector<TrimCurveData> m_CurveDataDw;//一级指针有内容！！！
     vector<tag_t> m_tempCurves;
 
     vector<CurveData> m_allTrimCurves;

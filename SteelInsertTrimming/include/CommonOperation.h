@@ -22,6 +22,8 @@ public:
     {
         creataDST(temp(0));
         creataUST(temp());
+        MyFun::resetUpdata();
+        temp.writeOld();
     }
 
 private:
@@ -30,9 +32,12 @@ private:
        
         for (int i=0;i<m_CurveDataDw.size();i++)
         {
-            getCurvesInfo(m_CurveDataDw[i]);
-            createBodyDST();
-            createDetailDST();
+            if (m_CurveDataDw[i].trim_->size())
+            {
+                getCurvesInfo(m_CurveDataDw[i]);
+                createBodyDST();
+                createDetailDST();
+            }
         }
         return;
     }
@@ -40,9 +45,12 @@ private:
     {
         for (int i = 0; i < m_CurveDataUp.size(); i++)
         {
-            getCurvesInfo(m_CurveDataUp[i]);
-            createBodyUST();
-            createDetailUST();
+            if (m_CurveDataUp[i].trim_->size())
+            {
+                getCurvesInfo(m_CurveDataUp[i]);
+                createBodyUST();
+                createDetailUST();
+            }
         }
         return;
     }

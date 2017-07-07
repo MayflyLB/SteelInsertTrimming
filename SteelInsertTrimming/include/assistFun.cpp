@@ -15,7 +15,7 @@ double measureMinDimensionBCS(const vector<CurveData>& cdPt, tag_t sheet, double
     double origin[3] = { 0 };
     int  num_results = 0;
     UF_MODL_ray_hit_point_info_p_t hit_list = NULL;
-    if (projectDir[0] == 0 && projectDir[1] == 0 && projectDir[2] == 0) return 0;
+    if (fabs(projectDir[0]) < 0.000001 &&fabs(projectDir[1]) < 0.000001 && fabs(projectDir[2]) < 0.000001) return 0;
     UF_initialize();
     if (UF_OBJ_ask_status(sheet) == UF_OBJ_DELETED) uc1601("sheetÒÑ±»É¾³ý!", 1);
     for (int i = 0; i < cdPt.size(); i++)
@@ -2235,6 +2235,7 @@ void sortCurves(vector<tag_t> & curves, vector<vector<CurveData>> &rt_simplePro_
 
 void sortCurvesPointor(vector<CurveData*> tempDelete, vector<vector<CurveData*>> &rt_simplePro_)
 {
+    if (tempDelete.size()==0) return;
     vector<CurveData*>::iterator iter1;
     vector<CurveData*>::iterator iter2;
     UF_initialize();
@@ -2253,7 +2254,7 @@ void sortCurvesPointor(vector<CurveData*> tempDelete, vector<vector<CurveData*>>
     tag_t a ;
     tag_t b ;
 
-    double tolerance_ = 0.001;
+    double tolerance_ = 0.0001;
 
     if (tempDelete.size() == 0)
     {
@@ -2265,6 +2266,11 @@ void sortCurvesPointor(vector<CurveData*> tempDelete, vector<vector<CurveData*>>
         a = m_pCurveDataA->curve;
         for (iter1 = tempDelete.begin(); iter1 != tempDelete.end() && tempDelete.size() > 0; ++iter1)
         {
+            while((*iter1)->dist_len < 0.001&&iter1!=tempDelete.end())
+            {
+                tempDelete.erase(iter1);
+            }
+            if (iter1 == tempDelete.end()) break;
             if (MyFun::is_Equal(m_pCurveDataA->end_point, (*iter1)->start_point, tolerance_))
             {
                 m_pCurveDataA = *iter1;
@@ -2284,6 +2290,12 @@ void sortCurvesPointor(vector<CurveData*> tempDelete, vector<vector<CurveData*>>
         b = m_pCurveDataB->curve;
         for (iter1 = tempDelete.begin(); iter1 != tempDelete.end() && tempDelete.size() > 0; ++iter1)
         {
+            while ((*iter1)->dist_len < 0.001&&iter1 != tempDelete.end())
+            {
+                tempDelete.erase(iter1);
+            }
+            if (iter1== tempDelete.end()) break;
+                
             if (MyFun::is_Equal(m_pCurveDataB->start_point, (*iter1)->start_point, tolerance_))
             {
                 (*iter1)->swap();
@@ -2582,19 +2594,15 @@ void autoCloseAssistCurves(vector<CurveData*>& trimCurves, double *dir, double w
     UF_INITIALIZE();
     if (MyFun::is_Equal(trimCurves[0]->start_point, trimCurves.back()->end_point, 0.001))
     {
-        count_ = 0;
-        char buf[128] = {0};
         for (int i = 0; i < trimCurves.size(); i++)
         {
             if (UF_OBJ_ask_status(*trimCurves[i]) == UF_OBJ_DELETED)
             {
-                sprintf_s(buf, "%d is not exist!\n", trimCurves[i]->curve);
-                SHOW_INFO_USR(buf);
+                SHOW_INFO_USR("The curve is not exist!");
             }
             else
             {
-                sprintf_s(buf, "%d is close!\n", trimCurves[i]->curve);
-                SHOW_INFO_USR(buf);
+                SHOW_INFO_USR("The curve is close!");
                 return;
             }
         }

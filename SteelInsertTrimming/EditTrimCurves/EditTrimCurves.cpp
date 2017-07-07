@@ -75,9 +75,10 @@ int EditTrimCurves::update_cb(NXOpen::BlockStyler::UIBlock* block)
         if(block == curvesSelect) { }
         else if(block == assistSelect)
         {
-            std::vector<NXOpen::TaggedObject *>&&temp = assistSelect->GetSelectedObjects();
-            for (int i = 0; i < temp.size(); i++)
-                m_pAssistCurves.push_back(new CurveData(temp[i]->GetTag()));
+
+//             std::vector<NXOpen::TaggedObject *>&&temp = assistSelect->GetSelectedObjects();
+//             for (int i = 0; i < temp.size(); i++)
+//                 m_pAssistCurves.push_back(new CurveData(temp[i]->GetTag()));
         }  
         else if(block == cutDir)
         {
@@ -107,6 +108,9 @@ int EditTrimCurves::update_cb(NXOpen::BlockStyler::UIBlock* block)
             origin_.X = 0;
             origin_.Y = 1;
             manipulator->SetYAxis((Vector3d)origin_);
+            cutDir->SetShow(false);
+            curvesSelect->SetShow(false);
+            assistSelect->Focus();
         }
         else if(block == manipulator)
         {
@@ -132,7 +136,7 @@ void EditTrimCurves::simplifySpline()
         UF_VEC3_negate((double*)&m_cutDir, (double*)&m_cutDir);
     double pt_[3];
     MyFun::getCurvePt(m_pTrimCurves[0]->curve, 0.5, pt_);
-    MyFun::getDirectionPos((double*)&m_cutDir, pt_, 50, pt_);
+    MyFun::getDirectionPos((double*)&m_cutDir, pt_, 100, pt_);
     MyFun::projectOperation(pt_, (double*)&m_cutDir, m_allTrimCurves);
 
     vector<tag_t> tempVVV;
@@ -296,7 +300,7 @@ void EditTrimCurves::GenerateAssistLines()
         CurveData* tempCDPSET = new CurveData[m_trimCurvesGroupUP[i].size()];//
         for (int j = 0; j < m_trimCurvesGroupUP[i].size(); j++)
         {
-            tempCDPSET[j].setData(MyFun::moveObj(m_trimCurvesGroupUP[i][j]->curve, m_cutDir, 100, false));
+            tempCDPSET[j].setData(MyFun::moveObj(m_trimCurvesGroupUP[i][j]->curve, m_cutDir, 200, false));
             tempCDVSET[i].push_back(&tempCDPSET[j]);
         }
         vector<vector<CurveData*>> rt_simplePro;

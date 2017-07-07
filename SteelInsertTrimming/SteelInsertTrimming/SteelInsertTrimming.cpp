@@ -241,7 +241,7 @@ void SteelInsertTrimming::setValue()
 
     sheetMoveDistUI->SetValue(sheetMoveDist);
     moveDirUI->SetVector(moveDir);
-    intervalDistUI->SetValue(intervalDist);
+    //intervalDistUI->SetValue(intervalDist);
 
     cutDeltaLenUI->SetValue(cutDirDeltaLen);
     toolHeightUI->SetValue(toolHeight);

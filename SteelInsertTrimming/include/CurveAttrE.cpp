@@ -113,18 +113,22 @@ void CurveAttrE::delelteCurveData()
 {
     for (int i = 0; i < m_CurveDataUp.size(); i++)
     {
-        delete[](*m_CurveDataUp[i].trim_)[0];
-        delete[](*m_CurveDataUp[i].assist_)[0];
+        if ((*m_CurveDataUp[i].trim_).size())
+            delete[](*m_CurveDataUp[i].trim_)[0];
+        if((*m_CurveDataUp[i].assist_).size())
+            delete[](*m_CurveDataUp[i].assist_)[0];
     }
     if (m_CurveDataUp.size())
     {
-        delete[] m_CurveDataUp[0].trim_;
-        delete[] m_CurveDataUp[0].assist_;
+        if(m_CurveDataUp[0].trim_)
+            delete[] m_CurveDataUp[0].trim_;
+        if(m_CurveDataUp[0].assist_)
+            delete[] m_CurveDataUp[0].assist_;
     }
     m_CurveDataUp.clear();
 }
 
-void CurveAttrE::writeOld(std::vector<TrimCurveData>& curveSet)
+void CurveAttrE::writeOld(std::vector<TrimCurveData>& curveSet)const
 {
     UF_INITIALIZE();
     UF_ATTR_value_t attrValueTypeString;

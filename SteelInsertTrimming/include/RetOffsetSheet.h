@@ -21,7 +21,7 @@ private:
 
     bool has_offsetSheet(double offsetDist, bool isMove,double *dir,double movedist);
 
-    void setORGSheetInfo();
+    void setORGSheetInfo(tag_t temp);
 
     void setOffSheetInfo(double offsetDist);
 

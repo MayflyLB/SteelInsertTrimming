@@ -289,7 +289,7 @@ void CommonOperation::extrudBlankBody(tag_t& extrud, tag_t sheetTag)
     double startP = 0;
     double endP = 0;
 
-    if (cutShapeBlank==0 || isTrimLClose == false)//普通模式+截断模式(看st_deltaCutLen够长就是普通模式,太短就是界面模式) 刃口(只有修边线是开口时,才有截断付型面的情况)
+    if (fabs(cutShapeBlank)<0.1 || isTrimLClose == false)//普通模式+截断模式(看st_deltaCutLen够长就是普通模式,太短就是界面模式) 刃口(只有修边线是开口时,才有截断付型面的情况)
     {
         startP = m_minDist - toolHeight - 2;//去除付型避让长度
         endP = 360 + m_minDist;
@@ -306,7 +306,7 @@ void CommonOperation::extrudBlankBody(tag_t& extrud, tag_t sheetTag)
 
     if (extrud)
     {
-        if (cutShapeBlank == 0 || isTrimLClose == false)//st_isLimitCutLen == true && st_isTrimLClose == true//才是平面生成
+        if (fabs(cutShapeBlank)<0.1 || isTrimLClose == false)//st_isLimitCutLen == true && st_isTrimLClose == true//才是平面生成
         {
             try
             {
@@ -333,7 +333,7 @@ void CommonOperation::extrudBlankBodyUDST(tag_t& extrud, tag_t sheetTag)
     double startP = 0;
     double endP = 0;
 
-    if (cutShapeBlank == 0 || isTrimLClose == false)
+    if (fabs(cutShapeBlank)<0.1 || isTrimLClose == false)
     {
         startP = m_minDist - toolHeight - 2;//去除付型避让长度
         endP = cutDirDeltaLen + m_minDist;
@@ -350,7 +350,7 @@ void CommonOperation::extrudBlankBodyUDST(tag_t& extrud, tag_t sheetTag)
 
     if (extrud)
     {
-        if (cutShapeBlank == 0 || isTrimLClose == false)
+        if (fabs(cutShapeBlank)<0.1 || isTrimLClose == false)
         {
             try
             {
@@ -621,25 +621,11 @@ void CommonOperation::createBodyDST()
 
     UF_initialize();
     UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
-    sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist,moveDir,sheetMoveDist, m_isMove, offsetDeviation,stepoverDeviation);
-
+    sheetTag = m_retOffsetSheet->retOffsetSheet(0,moveDir,sheetMoveDist, m_isMove, 1,2);
     m_minDist = measureMinDimensionBCS(m_trimLD, sheetTag, cutDir);//偏置后需要再次求出最小距离
     extrudBlankBodyUDST(m_extrud, sheetTag);
-
-    tag_t temp = 0;
-    tag_t feat = 0;
-
-//     for (int i = 0; i < m_trimVCC.size() && intervalDist>0; i++)
-//     {
-//         temp = createExtrudeBodyEx(m_trimVCC[i], intervalDist);
-//         UF_MODL_subtract_bodies_with_retained_options(m_extrud, temp, false, false, &feat);
-//         UF_MODL_ask_feat_body(feat, &m_extrud);
-//         MyFun::DeleteParms(1, &m_extrud);
-//     }
     setBodyColor(m_extrud, col[0], col[1]);	//COL确定修编刀口侧面颜色6以及内部体的颜色129
     UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
-
-    MyFun::resetUpdata();
     UF_terminate();
 }
 
@@ -663,7 +649,7 @@ void CommonOperation::createBodyUST()
     }
     UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
     UF_terminate();
-    MyFun::resetUpdata();
+    //MyFun::resetUpdata();
     setBodyColor(m_extrud, col[0], col[1]);	//COL确定修编刀口侧面颜色6以及内部体的颜色129
 }
 
@@ -692,9 +678,9 @@ void CommonOperation::createDetailDST()
         UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
 
 
-        if (cutDirToolBlank)
+        if (fabs(cutDirToolBlank)>0.1)
         {
-            sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist - cutDirCutLen,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
+            sheetTag = m_retOffsetSheet->retOffsetSheet(- cutDirCutLen,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
             for (int i = 0; i < m_trimVCC.size(); i++)
             {
                 tag_t temp = createExtrudeBodyEx(m_trimVCC[i], /*intervalDist +*/ cutDirToolBlank);
@@ -706,18 +692,18 @@ void CommonOperation::createDetailDST()
             }
         }
         UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
-        MyFun::resetUpdata();
+        //MyFun::resetUpdata();
 
 
         UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
 
 
-        if (cutShapeBlank)//有符型面
+        if (fabs(cutShapeBlank)>0.1)//有符型面
         {
-            createShapeBlank(129, 129);
+            createShapeBlank(129, 129,1);
         }
         UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
-        MyFun::resetUpdata();
+        //MyFun::resetUpdata();
        
         UF_terminate();
     } 
@@ -738,7 +724,7 @@ void CommonOperation::createDetailUST()
         int a[4] = { 0,29,129,129 };//COL 修编刀口的颜色 0是不设置颜色
         extractFaces(m_extrud, sideFaces, cutShapeFaces, floorFaces, backboard, a);
 
-        if (cutDirToolBlank)
+        if (fabs(cutDirToolBlank)>0.1)
         {
             sheetTag = m_retOffsetSheet->retOffsetSheet(sheetOffsetDist + cutDirCutLen,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation);
             for (int i = 0; i < m_trimVCC.size(); i++)
@@ -754,15 +740,15 @@ void CommonOperation::createDetailUST()
         }
 
         UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
-        MyFun::resetUpdata();
+        //MyFun::resetUpdata();
         UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
-        if (cutShapeBlank)//有符型面
+        if (fabs(cutShapeBlank)>0.1)//有符型面
         {
             createShapeBlank(129, 129, 0);
         }
         UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
         UF_terminate();
-        MyFun::resetUpdata();
+        //MyFun::resetUpdata();
     }
     m_extrud = 0;
 }
@@ -895,11 +881,11 @@ void CommonOperation::createShapeBlank(int col1, int col2, int flagUD)
     tag_t  body = 0;
     tag_t shapeBlank = 0;
     double dist = 0;
-    if (cutShapeBlank)//有符型面
+    if (fabs(cutShapeBlank)>0.1)//有符型面
     {
         UF_DISP_set_display(UF_DISP_SUPPRESS_DISPLAY);
         if (flagUD)
-            extrudBlankBody(body, m_retOffsetSheet->retOffsetSheet(-cutShapeBlank + sheetOffsetDist,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation));
+            extrudBlankBody(body, m_retOffsetSheet->retOffsetSheet(-cutShapeBlank,  moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation));
         else
             extrudBlankBody(body, m_retOffsetSheet->retOffsetSheet(cutShapeBlank + sheetOffsetDist, moveDir, sheetMoveDist, m_isMove, offsetDeviation, stepoverDeviation));
         for (int i = 0; i < m_trimVCC.size(); i++)
@@ -958,7 +944,7 @@ void CommonOperation::createShapeBlank(int col1, int col2, int flagUD)
             }
             else
             {
-                uc1601("切割结果不是预期!", 1);
+                uc1601("付型切割结果不是预期!", 1);
                 theSession->UndoToMark(markId1, NULL);
                 theSession->DeleteUndoMark(markId1, NULL);
                 UF_DISP_set_display(UF_DISP_UNSUPPRESS_DISPLAY);
@@ -987,7 +973,7 @@ void CommonOperation::createShapeBlank(int col1, int col2, int flagUD)
             }
             else
             {
-                uc1601("切割结果不是预期!", 1);
+                uc1601("付型结果不是预期!", 1);
                 theSession->UndoToMark(markId1, NULL);
                 theSession->DeleteUndoMark(markId1, NULL);
                 shapeBlank = 0;
@@ -1186,6 +1172,8 @@ void CommonOperation::getCurvesInfo(const TrimCurveData& info)
         vccdata temp;
         for (int j = 0; j < rt_trimCruves[i].size(); j++)
         {
+            if (rt_trimCruves[i][j]->dist_len<0.01)
+                continue;
             trimLtag.push_back(*rt_trimCruves[i][j]);
             m_trimLD.push_back(*rt_trimCruves[i][j]);
             temp.vect.push_back(*rt_trimCruves[i][j]);
@@ -1199,10 +1187,26 @@ void CommonOperation::getCurvesInfo(const TrimCurveData& info)
     {
         for (int j = 0; j < rt_assistCurves[i].size(); j++)
         {
+            if (rt_assistCurves[i][j]->dist_len < 0.01)
+                continue;
             trimLtag.push_back(*rt_assistCurves[i][j]);
             m_assistLD.push_back(*rt_assistCurves[i][j]);
         }
     }
-    UF_VEC3_cross(m_trimVCC[0].a.dir_Center, m_trimVCC[0].b.dir_Center, cutDir);
+    CurveData temp;
+    int status;
+    for (int i=0;i<m_trimVCC[0].vect.size();i++)
+    {
+        temp.setData(m_trimVCC[0].vect[i]);
+        if (temp.type_==UF_line_type)
+        {
+            UF_VEC3_is_parallel(m_trimVCC[0].a.dir_Center, temp.dir_Center,0.000001, &status);
+            if (status==0)
+            {
+                UF_VEC3_cross(m_trimVCC[0].a.dir_Center, temp.dir_Center, cutDir);
+                break;
+            }
+        }
+    }
 }
 

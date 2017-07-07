@@ -665,7 +665,6 @@ int findAttr(tag_t obj, char * title, int type/*= UF_ATTR_string*/);
 
 bool is_3DCurve(const vector<tag_t> &curves, double *dir3=NULL);//spline不在一个平面上极为3d
 
-
 inline tag_t createPointSetFeat(const vector<tag_t>& curves, int count_)
 {
     Session *theSession = Session::GetSession();
@@ -780,6 +779,5 @@ inline tag_t createPointSetFeat(const vector<tag_t>& curves, int count_)
 
     return nXObject1->Tag();
 }
-
 
 #endif

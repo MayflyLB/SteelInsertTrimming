@@ -109,8 +109,6 @@ private:
         curvesSelect->SetSelectedObjects(temp);
     }
 
-
-
     CommonOperation* retOper();
     void generateOper()
     {

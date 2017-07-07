@@ -40,12 +40,10 @@ public:
         m_focusPt = NULL;
         index = 0;
     }
-    
     void adjustFocus(double *pt)
     {
         
     }
-
     void moveLine(double *pt)
     {
         if (m_currentMovLines.size()==2)
@@ -61,8 +59,8 @@ public:
 
         }
     }
-    
 private:
+
     std::vector<vector<CurveData*>>& m_MoveLinesGroup;
     vector<CurveData*>* m_currentGroup;
     std::vector<CurveData*>m_currentMovLines;
@@ -70,6 +68,8 @@ private:
     double *m_focusPt;
     int index;
 };
+
+
 
 class DllExport EditTrimCurves
 {

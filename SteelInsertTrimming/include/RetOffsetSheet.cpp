@@ -157,7 +157,7 @@ RetOffsetSheet::RetOffsetSheet(std::vector<tag_t> sheets, double offsetDist, dou
         {
             MyFun::CSolidObj temp(m_targerSheet);
             UF_VEC3_midpt(temp.m_topCenter, temp.m_bottomCenter, m_centerPt);
-            setORGSheetInfo();
+            setORGSheetInfo(m_targerSheet);
             m_allSheets.push_back(m_targerSheet);
             if (fabs(offsetDist) > 0.01)
             {
@@ -183,7 +183,7 @@ RetOffsetSheet::RetOffsetSheet(std::vector<tag_t> sheets, double offsetDist, dou
         m_targerSheet = sewSheets(sheets);
         MyFun::CSolidObj temp(m_targerSheet);
         UF_VEC3_midpt(temp.m_topCenter, temp.m_bottomCenter, m_centerPt);
-        setORGSheetInfo();
+        setORGSheetInfo(m_targerSheet);
         m_allSheets.push_back(m_targerSheet);
         if (fabs(offsetDist) > 0.01)
         {
@@ -237,7 +237,7 @@ bool RetOffsetSheet::has_offsetSheet(double offsetDist,bool isMove, double *move
     for (int i = 0; i < m_allSheets.size(); i++)
     {
         readOffsetSheetInfo(m_allSheets[i], offsetDist_, dir_, moveDist_);
-        if (fabs(offsetDist_ - offsetDist) < 0.001)
+        if (fabs(offsetDist_ - offsetDist) < 0.001&&is_offSheet(m_allSheets[i]))
         {
             if (isMove)
             {
@@ -266,7 +266,7 @@ void RetOffsetSheet::readOffsetSheetInfo(tag_t obj, double &offsetDist, double* 
     double pt[3];
     double dir[3];
     if (moveDir==NULL) moveDir = dir;
-    if (is_offSheet(obj) || is_orgSheet(obj))
+    if (is_offSheet(obj))
     {
         readSheetInfo(obj, pt, offsetDist, moveDir, moveDist);
     }
@@ -284,10 +284,10 @@ void RetOffsetSheet::setOffSheetInfo(double offsetDistN)
     setSheetInfo(m_retSheet, OFF,m_centerPt, offsetDistN, dir,0.0);
 }
 //缝合的片体或者单个原始只存储 中心点，其他信息为0
-void RetOffsetSheet::setORGSheetInfo()
+void RetOffsetSheet::setORGSheetInfo(tag_t temp)
 {
     double dir[3] = { 0 };
-    setSheetInfo(m_targerSheet, ORG, m_centerPt,0.0, dir,0.0);
+    setSheetInfo(temp, ORG, m_centerPt,0.0, dir,0.0);
 }
 
 bool RetOffsetSheet::readCenter(tag_t obj,double *center)
