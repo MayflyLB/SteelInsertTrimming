@@ -157,8 +157,17 @@ RetOffsetSheet::RetOffsetSheet(std::vector<tag_t> sheets, double offsetDist, dou
         {
             MyFun::CSolidObj temp(m_targerSheet);
             UF_VEC3_midpt(temp.m_topCenter, temp.m_bottomCenter, m_centerPt);
+            TrimExtendSheet(m_targerSheet);
             setORGSheetInfo(m_targerSheet);
             m_allSheets.push_back(m_targerSheet);
+            if (isMove)
+            {
+                m_retSheet = MyFun::moveObj(m_targerSheet, moveDir, moveDist, false);
+                TrimExtendSheet(m_retSheet);
+                setSheetInfo(m_retSheet, OFF, m_centerPt, 0, moveDir, moveDist);
+                m_allSheets.push_back(m_retSheet);
+            }
+            
             if (fabs(offsetDist) > 0.01)
             {
                 m_retSheet = offsetSheet(m_targerSheet, offsetDist, offsetDeviation, stepoverDeviation);
@@ -183,8 +192,17 @@ RetOffsetSheet::RetOffsetSheet(std::vector<tag_t> sheets, double offsetDist, dou
         m_targerSheet = sewSheets(sheets);
         MyFun::CSolidObj temp(m_targerSheet);
         UF_VEC3_midpt(temp.m_topCenter, temp.m_bottomCenter, m_centerPt);
+        TrimExtendSheet(m_targerSheet);
         setORGSheetInfo(m_targerSheet);
         m_allSheets.push_back(m_targerSheet);
+        if (isMove)
+        {
+            m_retSheet = MyFun::moveObj(m_targerSheet, moveDir, moveDist, false);
+            TrimExtendSheet(m_retSheet);
+            setSheetInfo(m_retSheet, OFF, m_centerPt, 0, moveDir, moveDist);
+            m_allSheets.push_back(m_retSheet);
+        }
+        
         if (fabs(offsetDist) > 0.01)
         {
             m_retSheet = offsetSheet(m_targerSheet, offsetDist, offsetDeviation, stepoverDeviation);
@@ -277,7 +295,7 @@ void RetOffsetSheet::readOffsetSheetInfo(tag_t obj, double &offsetDist, double* 
         memset(moveDir, 0, 3 * sizeof(double));
     }
 }
-
+//设置非移动的片体的信息
 void RetOffsetSheet::setOffSheetInfo(double offsetDistN)
 {
     double dir[3] = {0};
@@ -287,7 +305,7 @@ void RetOffsetSheet::setOffSheetInfo(double offsetDistN)
 void RetOffsetSheet::setORGSheetInfo(tag_t temp)
 {
     double dir[3] = { 0 };
-    setSheetInfo(temp, ORG, m_centerPt,0.0, dir,0.0);
+    setSheetInfo(temp,OFF, m_centerPt,0.0, dir,0.0);
 }
 
 bool RetOffsetSheet::readCenter(tag_t obj,double *center)

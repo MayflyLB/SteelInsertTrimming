@@ -1,9 +1,9 @@
-#ifndef _ASSISTFUN_H_
+ï»¿#ifndef _ASSISTFUN_H_
 #define  _ASSISTFUN_H_
 
 
 // NX 8.5.0.23
-// Journal created by liban on Wed Sep 28 10:44:19 2016 ÖĞ¹ú±ê×¼Ê±¼ä
+// Journal created by liban on Wed Sep 28 10:44:19 2016 ä¸­å›½æ ‡å‡†æ—¶é—´
 //
 #include <uf_defs.h>
 #include <NXOpen/NXException.hxx>
@@ -114,7 +114,7 @@ using namespace NXOpen;
 class CurveData;
 struct TrimCurvesInfo
 {
-    vector<vector<CurveData*>> trimCruves;//ĞŞ±ßÏßºÍ¸¨ÖúÏß³É¶ÔÇ°ºóÏà½Ó´æ´¢ÔÚ±¾±äÁ¿ÖĞ¡£
+    vector<vector<CurveData*>> trimCruves;//ä¿®è¾¹çº¿å’Œè¾…åŠ©çº¿æˆå¯¹å‰åç›¸æ¥å­˜å‚¨åœ¨æœ¬å˜é‡ä¸­ã€‚
     Vector3d dir;
 };
 
@@ -140,10 +140,10 @@ void stdProcessCurves(vector<vector<CurveData>>&temp_);
 void stdProcessCurves(vector<vector<CurveData*>>&temp_);
 void sortCurvesPointor(vector<CurveData*> tempDelete, vector<vector<CurveData*>> &rt_simplePro_);
 
-class CurveData //ÔªËØÊı¾İ²»ĞèÒªuf_initialize()
+class CurveData //å…ƒç´ æ•°æ®ä¸éœ€è¦uf_initialize()
 {
     typedef CurveData CD;
-public:     //ÀàÊôĞÔº¯Êı
+public:     //ç±»å±æ€§å‡½æ•°
     CurveData()
     {
         set0();
@@ -179,7 +179,7 @@ public:     //ÀàÊôĞÔº¯Êı
         return *this;
     }
 
-public:     //ÄÚÍâÔ­×Ó²Ù×İ
+public:     //å†…å¤–åŸå­æ“çºµ
     void set0()
     {
         memset(&curve, 0, sizeof(CurveData));
@@ -199,7 +199,7 @@ public:     //ÄÚÍâÔ­×Ó²Ù×İ
         }
     }
 
-    //ÄÚ²¿Ô­×Ó²Ù×÷
+    //å†…éƒ¨åŸå­æ“ä½œ
     void SetData()
     {
         UF_INITIALIZE()
@@ -219,7 +219,7 @@ public:     //ÄÚÍâÔ­×Ó²Ù×İ
                     UF_MODL_ask_edge_type(curve, &subType_);
                     if (subType_ == UF_MODL_LINEAR_EDGE)
                         type_ = UF_line_type;
-                    else if (subType_ == UF_MODL_CIRCULAR_EDGE)//ÆäËûÀàĞÍµÄ±ß ²»´¦Àí
+                    else if (subType_ == UF_MODL_CIRCULAR_EDGE)//å…¶ä»–ç±»å‹çš„è¾¹ ä¸å¤„ç†
                         type_ = UF_circle_type;
                     else
                         type_ = 0;
@@ -240,7 +240,7 @@ public:     //ÄÚÍâÔ­×Ó²Ù×İ
             }
             else
             {
-                uc1601("ÊäÈëÇúÏß²»´æÔÚ£¡", 1);
+                uc1601("è¾“å…¥æ›²çº¿ä¸å­˜åœ¨ï¼", 1);
             }
     }
     void swap()
@@ -266,9 +266,9 @@ public:     //ÄÚÍâÔ­×Ó²Ù×İ
         if (pt)
             UF_VEC3_copy(pt, vertexPt);
     }
-public:     //¶ÔÏó¹ØÏµ
+public:     //å¯¹è±¡å…³ç³»
 
-    bool isParallel(const CD& r, double angle = 0.001)//Ö±Ïß²ÅÓĞµÄÆ½ĞĞÅĞ¶ÏÅĞ¶Ï 0<=angle<=PI/2
+    bool isParallel(const CD& r, double angle = 0.001)//ç›´çº¿æ‰æœ‰çš„å¹³è¡Œåˆ¤æ–­åˆ¤æ–­ 0<=angle<=PI/2
     {
         int rt = 0;
         if (type_ == r.type_&&type_ == UF_line_type)
@@ -285,7 +285,7 @@ public:     //¶ÔÏó¹ØÏµ
         }
 
     }
-    bool isConnect(const CD & r)//´¦Àí½»»»¶Ëµã.
+    bool isConnect(const CD & r)//å¤„ç†äº¤æ¢ç«¯ç‚¹.
     {
         if (MyFun::is_Equal(r.end_point, start_point, 0.001))
         {
@@ -343,7 +343,7 @@ public:     //¶ÔÏó¹ØÏµ
         return this->curve;
     }
 
-public: //Ô­×ÓÖØ½¨
+public: //åŸå­é‡å»º
 
     void reEditLine(double startPt[3], double endPt[3])
     {
@@ -398,15 +398,15 @@ public:
     double vertexPt[3];
 
     int type_; //UF_line_type UF_circle_type
-    int baseType;//±ß70£¬·ñÔò0 
-    double dir_Center[3];//Ö±Ïß ->·½Ïò,Ô²»¡->ÖĞĞÄµã×ø±ê
-    double dist_len;//Ö±Ïß->Ö±Ïß->³¤¶È Ô²»¡->³¤¶È
-    double radius; //Ô²»¡°ë¾¶
+    int baseType;//è¾¹70ï¼Œå¦åˆ™0 
+    double dir_Center[3];//ç›´çº¿ ->æ–¹å‘,åœ†å¼§->ä¸­å¿ƒç‚¹åæ ‡
+    double dist_len;//ç›´çº¿->ç›´çº¿->é•¿åº¦ åœ†å¼§->é•¿åº¦
+    double radius; //åœ†å¼§åŠå¾„
 };
 
 struct vccdata
 {
-    CurveData a; //·½ÏòÖ¸Ïò¶¨µã·½Ïò.
+    CurveData a; //æ–¹å‘æŒ‡å‘å®šç‚¹æ–¹å‘.
     CurveData b;
     vector<tag_t> vect;
 };
@@ -414,7 +414,7 @@ struct vccdata
 extern char szTrim[];
 extern char szAssist[];
 
-/************ÒÔ³ÉÔ±µÄ·½Ê½Ôö¼ÓÉèÖÃ¾ø¶Ô×ø±êÏµ¹¦ÄÜ**************************************/
+/************ä»¥æˆå‘˜çš„æ–¹å¼å¢åŠ è®¾ç½®ç»å¯¹åæ ‡ç³»åŠŸèƒ½**************************************/
 
 #define DECLARE_CSYS_MFUN                       \
     private:                                    \
@@ -432,12 +432,12 @@ extern char szAssist[];
         UF_CSYS_set_wcs_display(1);             \
         DELETE_OBJ(abs_sys);                    \
 		}	
-#define INIT_ABS_CSYS()     SetAbsSys()         //UIÀàÖĞ·ÅÖÃÔÚ¹¹ÔìÀï
-#define TERM_ABS_CSYS()     SetOrgSys()         //UIÀàÖĞ·ÅÖÃÔÚÎö¹¹Àï
+#define INIT_ABS_CSYS()     SetAbsSys()         //UIç±»ä¸­æ”¾ç½®åœ¨æ„é€ é‡Œ
+#define TERM_ABS_CSYS()     SetOrgSys()         //UIç±»ä¸­æ”¾ç½®åœ¨ææ„é‡Œ
 /*********************************************************************************/
 //********************************************************************
 // Access:    	::public 
-// Description: ÇóÅöµã×îĞ¡¾àÀë,²¢½ÃÕıÓ³Éä·½Ïò
+// Description: æ±‚ç¢°ç‚¹æœ€å°è·ç¦»,å¹¶çŸ«æ­£æ˜ å°„æ–¹å‘
 // Par: 		const vector<CurveData> & cdPt
 // Par: 		vector<tag_t> & sheets
 // Par: 		double * projectDir
@@ -446,7 +446,7 @@ extern char szAssist[];
 double measureMinDimensionBCS(const vector<CurveData>& cdPt, tag_t sheet, double *projectDir);
 //********************************************************************
 // Access:    	::public 
-// Description: ÇóÒ»¸ö¶ÔÏóºÍÒ»Èº¶ÔÏóÖ®¼äµÄ×îĞ¡¾àÀë,·µ»Ø×îĞ¡¾àÀëµÄ¶ÔÏóÈºÀïµÄ¶ÔÏó
+// Description: æ±‚ä¸€ä¸ªå¯¹è±¡å’Œä¸€ç¾¤å¯¹è±¡ä¹‹é—´çš„æœ€å°è·ç¦»,è¿”å›æœ€å°è·ç¦»çš„å¯¹è±¡ç¾¤é‡Œçš„å¯¹è±¡
 // Par: 		tag_t obj_
 // Par: 		vector<tag_t> tagertObj
 // Par: 		tag_t & hitBody
@@ -457,7 +457,7 @@ double MinDimension(tag_t obj_, vector<tag_t> tagertObj, tag_t& retBody, double 
 
 //********************************************************************
 // Access:    	::public 
-// Description: ×îĞ¡¾àÀëÖĞ×î´óÖµµÄtag
+// Description: æœ€å°è·ç¦»ä¸­æœ€å¤§å€¼çš„tag
 // Par: 		tag_t obj_
 // Par: 		vector<tag_t> tagertObj
 // Par: 		tag_t & retBody
@@ -467,16 +467,16 @@ double MinDimension(tag_t obj_, vector<tag_t> tagertObj, tag_t& retBody, double 
 double MaxDimension(tag_t obj_, vector<tag_t> tagertObj, tag_t& retBody, double * hitPt);
 //********************************************************************
 // Access:    	::public 
-// Description: ÓÃÀ´ÅĞ¶ÏtagµÄ¶ÔÏóÊÇ·ñÊÇÔÚ¼¤»îµÄÍ¼²ãµÄÓĞĞ§¶ÔÏó.
+// Description: ç”¨æ¥åˆ¤æ–­tagçš„å¯¹è±¡æ˜¯å¦æ˜¯åœ¨æ¿€æ´»çš„å›¾å±‚çš„æœ‰æ•ˆå¯¹è±¡.
 // Parame: 		tag_t obj
-// Returns:   	int ·µ»ØÖµÓÃÒÔÅĞ¶Ï,tagÊÇÔÚ¼¤»îµÄÍ¼²ãÀï²¢ÇÒ²»ÊÇÃ«Å÷¶ÔÏó,ÖµÉèÎª0
+// Returns:   	int è¿”å›å€¼ç”¨ä»¥åˆ¤æ–­,tagæ˜¯åœ¨æ¿€æ´»çš„å›¾å±‚é‡Œå¹¶ä¸”ä¸æ˜¯æ¯›å¯å¯¹è±¡,å€¼è®¾ä¸º0
 //********************************************************************
 int is_invisible_of(tag_t obj);
 
 //********************************************************************
 // Access:    	::public 
-// Description: È¡³öÏÔÊ¾²¿¼şÖĞµÄËùÓĞÆ¬ÌåºÍÆ¬ÌåµÄ¸öÊı;
-// Parame: 		vector<tag_t> & targetTagÖ»×öÊä³ö
+// Description: å–å‡ºæ˜¾ç¤ºéƒ¨ä»¶ä¸­çš„æ‰€æœ‰ç‰‡ä½“å’Œç‰‡ä½“çš„ä¸ªæ•°;
+// Parame: 		vector<tag_t> & targetTagåªåšè¾“å‡º
 // Returns:   	size_t;
 //********************************************************************
 size_t getAllSheets(vector<tag_t> & targetTag,const char*sheetName=NULL);
@@ -484,13 +484,13 @@ size_t getAllSheets(vector<tag_t> & targetTag,const char*sheetName=NULL);
 int  setBodyColor(tag_t obj, int col_1, int col_2);
 //********************************************************************
 // Access:    	::public 
-// Description: ´Ë´¦Òì³£²»ÓÃ²¹»ñ,µ÷ÓÃÕß²¹»ñ Ä¬ÈÏ´´½¨Ìå²»ÊÇÆ¬Ìå(ÓĞ¼Ó´Ö¹¦ÄÜ.)
+// Description: æ­¤å¤„å¼‚å¸¸ä¸ç”¨è¡¥è·,è°ƒç”¨è€…è¡¥è· é»˜è®¤åˆ›å»ºä½“ä¸æ˜¯ç‰‡ä½“(æœ‰åŠ ç²—åŠŸèƒ½.)
 // Par: 		std::vector<CurveData> curves
-// Par: 		CurveData dirt À­ÉìÇúÏß¼¯ÖĞÔÚ¶Ë´¦µÄÇúÏß,±ÕºÏÇúÏß¼¯¿ÉÒÔËæÒâ·ÅÖÃÒ»¸öÇúÏß¼¯ÖĞµÄÇúÏß,Ò»¶Ë´´½¨Ê§°Ü,ÓÃÁíÒ»¶Ë´´½¨
+// Par: 		CurveData dirt æ‹‰ä¼¸æ›²çº¿é›†ä¸­åœ¨ç«¯å¤„çš„æ›²çº¿,é—­åˆæ›²çº¿é›†å¯ä»¥éšæ„æ”¾ç½®ä¸€ä¸ªæ›²çº¿é›†ä¸­çš„æ›²çº¿,ä¸€ç«¯åˆ›å»ºå¤±è´¥,ç”¨å¦ä¸€ç«¯åˆ›å»º
 // Par: 		double * dir
-// Par: 		double startVertical À­ÉìÆğÊ¼Î»ÖÃ,Ïà¶ÔÓÚÇúÏß
+// Par: 		double startVertical æ‹‰ä¼¸èµ·å§‹ä½ç½®,ç›¸å¯¹äºæ›²çº¿
 // Par: 		double endVertical
-// Par: 		double startOffset ¼ÓºñÆğÊ¼Î»ÖÃ Ïà¶ÔÓÚÇúÏß
+// Par: 		double startOffset åŠ åšèµ·å§‹ä½ç½® ç›¸å¯¹äºæ›²çº¿
 // Par: 		double endOffset
 // Ret:   		tag_t
 //********************************************************************
@@ -498,7 +498,7 @@ tag_t extrudorEx(std::vector<tag_t> curves, CurveData dirt, double *dir,
     double startVertical, double endVertical, double startOffset, double endOffset);
 //********************************************************************
 // Access:    	::public 
-// Description: À­ÉìÆ¬Ìå
+// Description: æ‹‰ä¼¸ç‰‡ä½“
 // Par: 		std::vector<tag_t> curves
 // Par: 		CurveData dirt
 // Par: 		double * dir
@@ -511,7 +511,7 @@ tag_t createSheet(const std::vector<tag_t>& curves, CurveData& dirt, double *dir
 
 //********************************************************************
 // Access:    	::public 
-// Description: Æ«ÖÃÃæ µÄ¹¦ÄÜÆ«ÖÃÆ¬Ìå
+// Description: åç½®é¢ çš„åŠŸèƒ½åç½®ç‰‡ä½“
 // Par: 		vector<tag_t>sheetfaces
 // Par: 		double dist
 // Ret:   		tag_t feat;
@@ -520,7 +520,7 @@ tag_t  offsetFaceSheet(vector<tag_t>sheetfaces, double dist, bool flags);
 
 //********************************************************************
 // Access:    	::public 
-// Description: ´óÖÂÆ«ÖÃ µÄ¹¦ÄÜ Æ«ÖÃÆ¬Ìå
+// Description: å¤§è‡´åç½® çš„åŠŸèƒ½ åç½®ç‰‡ä½“
 // Par: 		tag_t sheet
 // Par: 		double offsetdist
 // Ret:   		tag_t
@@ -529,7 +529,7 @@ tag_t offsetSheet(tag_t sheet, double offsetdist, double v1 = 0, double v2 = 0);
 
 //********************************************************************
 // Access:    	::public 
-// Description: ·ìºÏÆ¬Ìå
+// Description: ç¼åˆç‰‡ä½“
 // Par: 		vector<tag_t> sheets
 // Ret:   		tag_t
 //********************************************************************
@@ -537,7 +537,7 @@ tag_t sewSheets(vector<tag_t>& sheets);
 
 //********************************************************************
 // Access:    	::public 
-// Description: ÑÓÕ¹Æ¬Ìå
+// Description: å»¶å±•ç‰‡ä½“
 // Par: 		tag_t sheet
 // Ret:   		tag_t
 //********************************************************************
@@ -553,10 +553,10 @@ void roughOffsetCurves(const double dist, const bool is_dir, vector<tag_t> &temp
 
 //********************************************************************
 // Access:    	::public 
-// Description: ÇúÏß²»Ïà½ÓÇé¿ö,±à¼­ÇúÏß
-// Par: 		CurveData & L1  ÕâÀï¼ÙÉèL1µÄ end_point ºÍ L2µÄ start_pointÓ¦¸ÃÊÇÏà½ÓµÄ.µ«Êµ¼ÊÁ½ÕßÓĞ¾àÀëÎó²î,0.5ÒÔÄÚ 
+// Description: æ›²çº¿ä¸ç›¸æ¥æƒ…å†µ,ç¼–è¾‘æ›²çº¿
+// Par: 		CurveData & L1  è¿™é‡Œå‡è®¾L1çš„ end_point å’Œ L2çš„ start_pointåº”è¯¥æ˜¯ç›¸æ¥çš„.ä½†å®é™…ä¸¤è€…æœ‰è·ç¦»è¯¯å·®,0.5ä»¥å†… 
 // Par: 		CurveData & L2
-// Par: 		double tolerance L1ºÍL2Ïà½Óµã×ø±êµ¥Öµ×î´ó²îÖµ
+// Par: 		double tolerance L1å’ŒL2ç›¸æ¥ç‚¹åæ ‡å•å€¼æœ€å¤§å·®å€¼
 // Ret:   		void
 //********************************************************************
 // inline void editTwoLines(CurveData & L1, CurveData & L2,const double& tolerance) 
@@ -603,7 +603,7 @@ inline void askCruvesDataEx(const vector<tag_t> &temp_1, vector<CurveData>&temp_
         temp_2.push_back(temp_1[i]);
 }
 
-//cd1 ºÍ cd2 ÊÕÎ²Ïà½Ó
+//cd1 å’Œ cd2 æ”¶å°¾ç›¸æ¥
 void editCurveData(const CurveData& cd1, CurveData &cd2);
 
 void sortCurves(vector<tag_t> & curves, vector<vector<CurveData>> &m_simplePro_, vector<vccdata>& m_trimVCC, vector<CurveData> &m_vertexPts, bool& st_isTrimLClose);
@@ -613,10 +613,10 @@ void deleteReCurve(vector<CurveData>& temp);
 //********************************************************************
 // Access:    	CommonOperation::private 
 // Description: 
-// Par: Int Out	const vector<tag_t> & tempSplines »¹ÓĞÑùÌõ»ò Ö±ÏßÔ²»¡
+// Par: Int Out	const vector<tag_t> & tempSplines è¿˜æœ‰æ ·æ¡æˆ– ç›´çº¿åœ†å¼§
 // Ret:   		void
 //********************************************************************
-void splinesProcessToLines(vector<tag_t> &tempSplines); //¸Õ¼ş·ûĞÍ±ÜÈÃÓÃ.
+void splinesProcessToLines(vector<tag_t> &tempSplines); //åˆšä»¶ç¬¦å‹é¿è®©ç”¨.
 
 inline tag_t createAxis(const double *dir, const double *org_t)
 {
@@ -633,14 +633,14 @@ inline tag_t createAxis(const double *dir, const double *org_t)
 // Ret	:   void
 // Disc	:	
 // Param: 	CurveData * * tempCD
-// Param: 	double dir[3]³å²Ã·½Ïò
-// Param: 	double width¸¨ÖúÏßÀ­³¤³¤¶È
+// Param: 	double dir[3]å†²è£æ–¹å‘
+// Param: 	double widthè¾…åŠ©çº¿æ‹‰é•¿é•¿åº¦
 // Param: 	double len0
 // Param: 	double len1
-// Param: 	int flag_type 0ÏÂÄ£ 1ÉÏÄ£µ¶¿é 
+// Param: 	int flag_type 0ä¸‹æ¨¡ 1ä¸Šæ¨¡åˆ€å— 
 // Param: 	vector<CurveData * > & assist
 //**********************************************
-void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double len0, double len1, int flag_type, vector<CurveData*>&assist);
+void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double len0, double len1, int flag_type, vector<CurveData*>&assist, double *generateDir = NULL);
 
 
 
@@ -650,10 +650,10 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
 // Param: 	double * dir
 // Param: 	double width
 // Param: 	vector<CurveData * > & assistLD
-// Param: 	int flag_type 0ÏÂÄ£ 1ÉÏÄ£µ¶¿é 
+// Param: 	int flag_type 0ä¸‹æ¨¡ 1ä¸Šæ¨¡åˆ€å— 
 void autoCloseAssistCurves(vector<CurveData*>& trimCurves, double *dir, double width, vector<CurveData*>& assistLD,int &count, int flag_type = 1);
 
-void adjustLineData(tag_t &line, UF_CURVE_line_t& lt);//ĞŞ±àÄ£¿é
+void adjustLineData(tag_t &line, UF_CURVE_line_t& lt);//ä¿®ç¼–æ¨¡å—
 
 void selectedCurves(NXOpen::BlockStyler::CurveCollector*uiBlock, std::vector<tag_t>&curves);
 
@@ -663,7 +663,7 @@ void readAttr(tag_t obj, char * title, int type /*= UF_ATTR_string*/,UF_ATTR_val
 
 int findAttr(tag_t obj, char * title, int type/*= UF_ATTR_string*/);
 
-bool is_3DCurve(const vector<tag_t> &curves, double *dir3=NULL);//spline²»ÔÚÒ»¸öÆ½ÃæÉÏ¼«Îª3d
+bool is_3DCurve(const vector<tag_t> &curves, double *dir3=NULL);//splineä¸åœ¨ä¸€ä¸ªå¹³é¢ä¸Šæä¸º3d
 
 inline tag_t createPointSetFeat(const vector<tag_t>& curves, int count_)
 {
@@ -748,7 +748,7 @@ inline tag_t createPointSetFeat(const vector<tag_t>& curves, int count_)
         }
         else
         {
-            SHOW_INFO_USR("´´½¨µã¼¯Òì³£(°üº¬·ÇÖ±ÏßÔ²»¡µÄÇúÏßÀàĞÍ)!");
+            SHOW_INFO_USR("åˆ›å»ºç‚¹é›†å¼‚å¸¸(åŒ…å«éç›´çº¿åœ†å¼§çš„æ›²çº¿ç±»å‹)!");
         }
     }
     CurveDumbRule *curveDumbRule1;

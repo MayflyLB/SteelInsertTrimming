@@ -1,4 +1,4 @@
-#include "assistFun.h"
+ï»¿#include "assistFun.h"
 
 
 char szTrim[] = "trim";
@@ -17,7 +17,7 @@ double measureMinDimensionBCS(const vector<CurveData>& cdPt, tag_t sheet, double
     UF_MODL_ray_hit_point_info_p_t hit_list = NULL;
     if (fabs(projectDir[0]) < 0.000001 &&fabs(projectDir[1]) < 0.000001 && fabs(projectDir[2]) < 0.000001) return 0;
     UF_initialize();
-    if (UF_OBJ_ask_status(sheet) == UF_OBJ_DELETED) uc1601("sheetÒÑ±»É¾³ı!", 1);
+    if (UF_OBJ_ask_status(sheet) == UF_OBJ_DELETED) uc1601("sheetå·²è¢«åˆ é™¤!", 1);
     for (int i = 0; i < cdPt.size(); i++)
     {
         UF_VEC3_midpt(cdPt[i].start_point, cdPt[i].end_point, origin);
@@ -184,18 +184,14 @@ tag_t extrudorEx(std::vector<tag_t> curves, CurveData dirt, double *dir, double 
     Section *section1 = workPart->Sections()->CreateSection(0.02413, 0.0254, 0.5);
     extrudeBuilder1->SetSection(section1);
     extrudeBuilder1->AllowSelfIntersectingSection(true);
-
-//     UF_initialize();
-//     for (int i = 0; i < curves.size();i++)
-//         UF_DISP_set_highlight(curves[i],1);
-
     extrudeBuilder1->SetDistanceTolerance(0.0254);
-    std::vector<Body *> targetBodies1(1);////////////////////////ÉèÎª¿Õ
+    std::vector<Body *> targetBodies1(1);////////////////////////è®¾ä¸ºç©º
     Body *nullBody(NULL);
     targetBodies1[0] = nullBody;
+
     extrudeBuilder1->BooleanOperation()->SetTargetBodies(targetBodies1);
 
-    char buf[32] = { 0 };///////////////////////////////////////À­Éì³ß´ç
+    char buf[32] = { 0 };///////////////////////////////////////æ‹‰ä¼¸å°ºå¯¸
     sprintf(buf, "%.f", startVertical);
     extrudeBuilder1->Limits()->StartExtend()->Value()->SetRightHandSide(buf);
     sprintf(buf, "%.f", endVertical);
@@ -217,7 +213,7 @@ tag_t extrudorEx(std::vector<tag_t> curves, CurveData dirt, double *dir, double 
     else
     {
         extrudeBuilder1->Offset()->SetOption(GeometricUtilities::TypeNonsymmetricOffset);
-        sprintf(buf, "%.2f", startOffset);///////////////////////////ºñ¶È
+        sprintf(buf, "%.2f", startOffset);///////////////////////////åšåº¦
         extrudeBuilder1->Offset()->StartOffset()->SetRightHandSide(buf);
         sprintf(buf, "%.2f", endOffset);
         extrudeBuilder1->Offset()->EndOffset()->SetRightHandSide(buf);
@@ -255,7 +251,7 @@ tag_t extrudorEx(std::vector<tag_t> curves, CurveData dirt, double *dir, double 
         {
             if (type_1 != type_ || subtype_1 != subtype_)
             {
-                MyFun::disp("ÊäÈëÏßĞÍÓĞÎó!");
+                MyFun::disp("è¾“å…¥çº¿å‹æœ‰è¯¯!");
                 return 0;
             }
         }
@@ -352,7 +348,7 @@ tag_t extrudorEx(std::vector<tag_t> curves, CurveData dirt, double *dir, double 
 
     extrudeBuilder1->SetDirection(direction1);
     extrudeBuilder1->SetParentFeatureInternal(false);
-    Features::Feature *feature1 = extrudeBuilder1->CommitFeature();//´Ë´¦Òì³£²»ÓÃ²¹»ñ,Ê¹ÓÃÕß²¹»ñ
+    Features::Feature *feature1 = extrudeBuilder1->CommitFeature();//æ­¤å¤„å¼‚å¸¸ä¸ç”¨è¡¥è·,ä½¿ç”¨è€…è¡¥è·
     extrudeBuilder1->Destroy();
     // ----------------------------------------------
     //   Menu: Tools->Journal->Stop Recording
@@ -392,7 +388,7 @@ tag_t createSheet(const std::vector<tag_t> &curves, CurveData& dirt, double *dir
     extrudeBuilder1->AllowSelfIntersectingSection(true);
     extrudeBuilder1->SetDistanceTolerance(0.0254);
 
-    char buf[32] = { 0 };///////////////////////////////////////À­Éì³ß´ç
+    char buf[32] = { 0 };///////////////////////////////////////æ‹‰ä¼¸å°ºå¯¸
     sprintf(buf, "%.2f", startVertical);
     extrudeBuilder1->Limits()->StartExtend()->Value()->SetRightHandSide(buf);
     sprintf(buf, "%.2f", endVertical);
@@ -424,7 +420,7 @@ tag_t createSheet(const std::vector<tag_t> &curves, CurveData& dirt, double *dir
     {
         if (UF_OBJ_ask_status(curves[i]) == UF_OBJ_DELETED)
         {
-            uc1601("¾¯¸æ:ÇúÏßÎŞĞ§!", 1);
+            uc1601("è­¦å‘Š:æ›²çº¿æ— æ•ˆ!", 1);
             continue;
         }
 
@@ -540,7 +536,7 @@ tag_t offsetSheet(tag_t sheet, double offsetdist, double v1, double v2)
     UF_INITIALIZE();
     if (UF_OBJ_ask_status(sheet) == UF_OBJ_DELETED)
     {
-        uc1601("Æ¬Ìå±»É¾³ı!", 1);
+        uc1601("ç‰‡ä½“è¢«åˆ é™¤!", 1);
     }
     ot.entities = &sheet;
     ot.num_entities = 1;
@@ -632,7 +628,7 @@ tag_t sewSheets(vector<tag_t>& sheet_s)
         UF_MODL_delete_list(&lpt);
     
     if (tempT.size())
-        SHOW_INFO_USR("¾¯¸æÆ¬Ìå·ìºÏÒì³££¡");
+        SHOW_INFO_USR("è­¦å‘Šç‰‡ä½“ç¼åˆå¼‚å¸¸ï¼");
     return bodyTag;
 }
 
@@ -730,7 +726,7 @@ void TrimExtendSheet(tag_t& sheet)
                 }
                 catch (const std::exception& ex)
                 {
-                    NX_CATCH_EX_INFO_USR("Æ¬ÌåÎŞ·¨Õı³£ÑÓ³¤£¬¿ÉÄÜµ¼ÖÂÎŞ·¨ÇĞ¸îÅ÷Ìå£¡");
+                    NX_CATCH_EX_INFO_USR("ç‰‡ä½“æ— æ³•æ­£å¸¸å»¶é•¿ï¼Œå¯èƒ½å¯¼è‡´æ— æ³•åˆ‡å‰²å¯ä½“ï¼");
                 }
             }
         }
@@ -789,23 +785,23 @@ void stdProcessCurves_(vector<vector<CurveData>>&temp_)
     // 	Sleep(1000);
     int currType = 0;
     vector<CurveData>::iterator it_sta;
-    vector<CurveData>::iterator it_stas;//ÒÔÒÑ´¦ÀíµÄÇúÏßµÄºó±ß½çÎª±¾µü´úÆ÷µÄÆğµã
+    vector<CurveData>::iterator it_stas;//ä»¥å·²å¤„ç†çš„æ›²çº¿çš„åè¾¹ç•Œä¸ºæœ¬è¿­ä»£å™¨çš„èµ·ç‚¹
     vector<CurveData>::iterator it_end;
-    vector<CurveData>::iterator it_ends;//ÒÔ´æÔÚµÄÇúÏßÎª±ß½ç,ÇúÏßÉ¾³ı,±ß½çÇ°ÒÆ,ÇúÏß´´½¨±ß½çºóÒÆ
+    vector<CurveData>::iterator it_ends;//ä»¥å­˜åœ¨çš„æ›²çº¿ä¸ºè¾¹ç•Œ,æ›²çº¿åˆ é™¤,è¾¹ç•Œå‰ç§»,æ›²çº¿åˆ›å»ºè¾¹ç•Œåç§»
     vector<CurveData>::iterator it_;
     UF_CURVE_line_t line_coords = { 0 };
     int isParallel = 0;
     double pt[3] = { 0 };
     UF_initialize();
 
-    double dist_centers = 0;//Ô²ĞÄ¾à
-    double avrR = 0;//;°ë¾¶¾ùÖµ
-    double d_value = 0;//°ë¾¶²îÖµ
+    double dist_centers = 0;//åœ†å¿ƒè·
+    double avrR = 0;//;åŠå¾„å‡å€¼
+    double d_value = 0;//åŠå¾„å·®å€¼
 
     double dist = 0;
     double dist_ = 0;
 
-    double toleranceProcess = 0.5;//³¤¶ÈĞ¡ÓÚ1´¦Àí¹éÓÚÈÎÒâ´¦Àí
+    double toleranceProcess = 0.5;//é•¿åº¦å°äº1å¤„ç†å½’äºä»»æ„å¤„ç†
     bool flag = false;
     for (int i = 0; i < temp_.size(); i++)
     {
@@ -849,12 +845,12 @@ void stdProcessCurves_(vector<vector<CurveData>>&temp_)
                             continue;
                         else
                         {
-                            if (it_sta != it_end)//µ±Ç°it_endÊÇ²»·ûºÏÒªÇóµÄ
+                            if (it_sta != it_end)//å½“å‰it_endæ˜¯ä¸ç¬¦åˆè¦æ±‚çš„
                             {
 
                                 for (it_ = it_sta; it_ != it_end; it_++)
                                 {
-                                    --it_ends;//ÒÆ¶¯±ß½ç
+                                    --it_ends;//ç§»åŠ¨è¾¹ç•Œ
                                     DELETE_OBJ(it_->curve);
                                 }
 
@@ -876,11 +872,11 @@ void stdProcessCurves_(vector<vector<CurveData>>&temp_)
                             }
                         }
                     }
-                    if (it_sta != it_end)//µ±Ç°it_endÊÇ²»·ûºÏÒªÇóµÄ
+                    if (it_sta != it_end)//å½“å‰it_endæ˜¯ä¸ç¬¦åˆè¦æ±‚çš„
                     {
                         for (it_ = it_sta; it_ != it_end; it_++)
                         {
-                            --it_ends;//ÒÆ¶¯±ß½ç
+                            --it_ends;//ç§»åŠ¨è¾¹ç•Œ
                             DELETE_OBJ(it_->curve);
                         }
 
@@ -931,7 +927,7 @@ void stdProcessCurves_(vector<vector<CurveData>>&temp_)
                                 dist = 0;
                                 for (it_ = it_sta; it_ != it_end; it_++)
                                 {
-                                    --it_ends;//ÒÆ¶¯±ß½ç
+                                    --it_ends;//ç§»åŠ¨è¾¹ç•Œ
                                     DELETE_OBJ(it_->curve);
                                     dist += it_->dist_len;
                                 }
@@ -966,7 +962,7 @@ void stdProcessCurves_(vector<vector<CurveData>>&temp_)
                         dist = 0;
                         for (it_ = it_sta; it_ != it_end; it_++)
                         {
-                            --it_ends;//ÒÆ¶¯±ß½ç
+                            --it_ends;//ç§»åŠ¨è¾¹ç•Œ
                             DELETE_OBJ(it_->curve);
                             dist += it_->dist_len;
                         }
@@ -989,7 +985,7 @@ void stdProcessCurves_(vector<vector<CurveData>>&temp_)
                     }
                 }
 
-                if (it_ends != temp_sub.end())//´óÓÚ¹«²î²ÅÊÇÓĞĞ§ÀàĞÍ
+                if (it_ends != temp_sub.end())//å¤§äºå…¬å·®æ‰æ˜¯æœ‰æ•ˆç±»å‹
                     currType = it_ends->type_;
                 else
                     currType = 0;
@@ -1791,7 +1787,7 @@ void ArcTranslateLine(vector<vector<CurveData*>>&temp_)
     UF_CURVE_line_t lt = { 0 };
     UF_initialize();
     double angle;
-    double tolerance=0.25;
+    double tolerance=0.005;
     double maxRadius;
     for (int i = 0; i < temp_.size(); i++)
     {
@@ -1890,13 +1886,13 @@ void roughOffsetCurves(const double dist, const bool is_dir, vector<tag_t> &temp
             tempCurves.push_back(outputCurves[i]);
     }
     else
-        uc1601("¾¯¸æ:´ÖÂÔÆ«ÖÃÇúÏßÊ§°Ü,¿ÉÄÜÔ­Òò:Æ«ÖÃ¾àÀë¹ı´ó,ÎŞÇúÏß²úÉú!", 1);
+        uc1601("è­¦å‘Š:ç²—ç•¥åç½®æ›²çº¿å¤±è´¥,å¯èƒ½åŸå› :åç½®è·ç¦»è¿‡å¤§,æ— æ›²çº¿äº§ç”Ÿ!", 1);
     UF_free(outputCurves);
     UF_TERMINATE();
     return;
 }
 
-void editCurveData(const CurveData& oldCD,CurveData &newCD)//cd1 ºÍ cd2 ÊÕÎ²Ïà½Ó
+void editCurveData(const CurveData& oldCD,CurveData &newCD)//cd1 å’Œ cd2 æ”¶å°¾ç›¸æ¥
 {
     UF_INITIALIZE();
     double pt[3];
@@ -1954,7 +1950,7 @@ void sortCurves(vector<tag_t> & curves, vector<vector<CurveData>> &rt_simplePro_
     rt_trimVCC.clear();
     rt_vertexPts.clear();
 
-    //¸¨ÖúËã·¨±äÁ¿
+    //è¾…åŠ©ç®—æ³•å˜é‡
     tag_t a = 0;
     tag_t b = 0;
     int count = 0;
@@ -1970,7 +1966,7 @@ void sortCurves(vector<tag_t> & curves, vector<vector<CurveData>> &rt_simplePro_
         if (!MyFun::is_Equal(m_CurveDataA.vertexPt, m_CurveDataB.vertexPt, tolerance_))
         {  
             rt_isTrimLClose = false;
-            rt_vertexPts.push_back(m_CurveDataA);//Ò»ÌõÏßÒ²Òª¼ÓÈë
+            rt_vertexPts.push_back(m_CurveDataA);//ä¸€æ¡çº¿ä¹Ÿè¦åŠ å…¥
             rt_vertexPts.push_back(m_CurveDataB);
         }
         else
@@ -2033,7 +2029,7 @@ void sortCurves(vector<tag_t> & curves, vector<vector<CurveData>> &rt_simplePro_
         }
         if ((a == m_CurveDataA.curve&&b == m_CurveDataB.curve )|| temp.empty())
         {
-            {//<1¿É±»ÈÏÎªÏà½Ó ¼ÌĞø
+            {//<1å¯è¢«è®¤ä¸ºç›¸æ¥ ç»§ç»­
                 double tempD = 999.9999;
                 double tempD_ = 999.9999;
                 iter = temp.begin();
@@ -2106,7 +2102,7 @@ void sortCurves(vector<tag_t> & curves, vector<vector<CurveData>> &rt_simplePro_
                     continue;
             }
 
-            if (!temp.empty())//²»¿¼ÂÇTĞÎÏà½ÓµÄÇé¿ö
+            if (!temp.empty())//ä¸è€ƒè™‘Tå½¢ç›¸æ¥çš„æƒ…å†µ
             {
                 int num_1 = BYTE_4(temp1.size());
                 int num_2 = BYTE_4(temp2.size());
@@ -2240,7 +2236,7 @@ void sortCurvesPointor(vector<CurveData*> tempDelete, vector<vector<CurveData*>>
     vector<CurveData*>::iterator iter2;
     UF_initialize();
 
-    CurveData * m_pCurveDataB, * m_pCurveDataA;//ÒÑ´æ¶ÓÁĞ
+    CurveData * m_pCurveDataB, * m_pCurveDataA;//å·²å­˜é˜Ÿåˆ—
     m_pCurveDataB = m_pCurveDataA = tempDelete.back();
     tempDelete.pop_back();
 
@@ -2250,7 +2246,7 @@ void sortCurvesPointor(vector<CurveData*> tempDelete, vector<vector<CurveData*>>
     tempA.push_back(m_pCurveDataA);
     rt_simplePro_.clear();
 
-    //¸¨ÖúËã·¨±äÁ¿
+    //è¾…åŠ©ç®—æ³•å˜é‡
     tag_t a ;
     tag_t b ;
 
@@ -2314,7 +2310,7 @@ void sortCurvesPointor(vector<CurveData*> tempDelete, vector<vector<CurveData*>>
         }
         if ((a == m_pCurveDataA->curve&&b == m_pCurveDataB->curve)|| tempDelete.empty())
         {
-            {//<1¿É±»ÈÏÎªÏà½Ó ¼ÌĞø
+            {//<1å¯è¢«è®¤ä¸ºç›¸æ¥ ç»§ç»­
                 double dist_1 = 999.9999;
                 double dist_2 = 999.9999;
                 iter1 = tempDelete.begin();
@@ -2389,7 +2385,7 @@ void sortCurvesPointor(vector<CurveData*> tempDelete, vector<vector<CurveData*>>
                     continue;
             }
 
-            if (!tempDelete.empty())//²»¿¼ÂÇTĞÎÏà½ÓµÄÇé¿ö
+            if (!tempDelete.empty())//ä¸è€ƒè™‘Tå½¢ç›¸æ¥çš„æƒ…å†µ
             {
 
                 int num_A = BYTE_4(tempA.size());
@@ -2525,7 +2521,7 @@ void deleteReCurve(vector<CurveData>& temp)
     UF_terminate();
 }
 
-bool is_3DCurve(const vector<tag_t> &curves, double *dir3) //spline²»ÔÚÒ»¸öÆ½ÃæÉÏ¼«Îª3d
+bool is_3DCurve(const vector<tag_t> &curves, double *dir3) //splineä¸åœ¨ä¸€ä¸ªå¹³é¢ä¸Šæä¸º3d
 {
     if (curves.size()==0)
     {
@@ -2657,7 +2653,7 @@ void autoCloseAssistCurves(vector<CurveData*>& trimCurves, double *dir, double w
     count_= BYTE_4(assistLD.size()- count_);
 }
 
-void adjustLineData(tag_t &line, UF_CURVE_line_t& lt) //ĞŞ±àÄ£¿é
+void adjustLineData(tag_t &line, UF_CURVE_line_t& lt) //ä¿®ç¼–æ¨¡å—
 {
     UF_initialize();
     int a;
@@ -2684,7 +2680,7 @@ void adjustLineData(tag_t &line, UF_CURVE_line_t& lt) //ĞŞ±àÄ£¿é
     UF_terminate();
 }
 
-void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double len0, double len1, int flag_type, vector<CurveData*>&assist)
+void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double len0, double len1, int flag_type, vector<CurveData*>&assist,double * generateDir/*=NULL*/)
 {
     width = width*1.2;
     double dirX[3] = { 1,0,0 };
@@ -2715,25 +2711,34 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
     UF_initialize();
     if (tempCD[0]->type_ != UF_line_type || tempCD[1]->type_ != UF_line_type) return;
     double magnitude;
-    UF_VEC3_unitize(tempCD[0]->dir_Center, 0.000001, &magnitude, tempCD[0]->dir_Center);
-    UF_VEC3_unitize(tempCD[1]->dir_Center, 0.000001, &magnitude, tempCD[1]->dir_Center);
-    //½ÇÆ½·ÖÏßºÍxy±È½ÏµÃ³ö¿¿°å³öµÄ¸¨ÖúÏßµÄ·½Ïò,ÓÃÓÚÖÇÄÜÅĞ¶ÏÉú³É·½Î»
-    UF_VEC3_add(tempCD[0]->dir_Center, tempCD[1]->dir_Center, dirAngular);
+    if (generateDir)
+    {
+        UF_VEC3_copy(generateDir, dirAngular);
+    }
+    else
+    {
+        UF_VEC3_unitize(tempCD[0]->dir_Center, 0.000001, &magnitude, tempCD[0]->dir_Center);
+        UF_VEC3_unitize(tempCD[1]->dir_Center, 0.000001, &magnitude, tempCD[1]->dir_Center);
+        //è§’å¹³åˆ†çº¿å’Œxyæ¯”è¾ƒå¾—å‡ºé æ¿å‡ºçš„è¾…åŠ©çº¿çš„æ–¹å‘,ç”¨äºæ™ºèƒ½åˆ¤æ–­ç”Ÿæˆæ–¹ä½
+        UF_VEC3_add(tempCD[0]->dir_Center, tempCD[1]->dir_Center, dirAngular);
+    }
     if ((dirAngular[0] >= -0.0001&& dirAngular[0] <= 0.0001) && (dirAngular[1] >= -0.0001
         && dirAngular[1] <= 0.0001) && (dirAngular[2] >= -0.0001&& dirAngular[2] <= 0.0001))
     {
-        uc1601("¾¯¸æ:¸¨ÖúÏßÎŞ·¨×Ô¶¯ÅĞ¶ÏÉú³É·½Î»!", 1);
+        uc1601("è­¦å‘Š:è¾…åŠ©çº¿ç”Ÿæˆæ–¹ä½æ— æ•ˆ!", 1);
         return;
     }
+
     //angle1 = MyFun::angleOfVectors(tempCD[0]->dir_Center, tempCD[1]->dir_Center);///todo
     UF_VEC3_sub(tempCD[0]->vertexPt, tempCD[1]->vertexPt, temp3D);
     double angle0 = MyFun::angleOfVectors(tempCD[0]->dir_Center, temp3D);
-    double angle1 = PI - MyFun::angleOfVectors(tempCD[1]->dir_Center, temp3D);//½ÃÕı½Ç¶È
+    double angle1 = PI - MyFun::angleOfVectors(tempCD[1]->dir_Center, temp3D);//çŸ«æ­£è§’åº¦
 
 
     const double angle_Max = PI * 4 / 9;
+    const double angle_Max1 = PI * 5/ 9;
     const double angle_Min = PI * 1 / 18;
-    if (angle0 > angle_Max&& angle1 > angle_Max&&flag_type)//ÉÏÄ£Ö±½ÓÏàÁ¬
+    if (angle0 > angle_Max&& angle1 > angle_Max&&flag_type)//ä¸Šæ¨¡ç›´æ¥ç›¸è¿
     {
         UF_VEC3_midpt(tempCD[0]->vertexPt, tempCD[1]->vertexPt, temp3D);
         MyFun::pointPerpToLine(temp3D, tempCD[0]->start_point, tempCD[0]->end_point, pt0);
@@ -2743,7 +2748,7 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
         double angle = MyFun::angleOfVectors(dirX, tempDir0);
         if (angle > PI / 2)
             angle = PI - angle;
-        //ÌùºÏXYÖá.
+        //è´´åˆXYè½´.
         if (angle < PI / 18)//dirX
         {
             MyFun::getDirectionPos(dirX, temp3D, 5, pt_);
@@ -2777,7 +2782,7 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
         UF_CURVE_create_line(&lt, &line_id);
         assist.push_back(new CurveData(line_id));
     }
-    else//ĞèÒª¸´ÔÓ´¦Àí
+    else//éœ€è¦å¤æ‚å¤„ç†
     {
         angle0 = MyFun::angleOfVectors(dirX, tempCD[0]->dir_Center);
         angle1 = MyFun::angleOfVectors(dirX, tempCD[1]->dir_Center);
@@ -2832,7 +2837,7 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
 
         double vertexPt[3];
         angle0 = MyFun::angleOfVectors(p_dir0, p_dir1);
-        if (angle0 != PI&&angle0 != 0)//·½ÏòĞ£Õı
+        if (angle0 != PI&&angle0 != 0)//æ–¹å‘æ ¡æ­£
         {
             MyFun::intersectPtOfLines_(p_dir0, tempCD[0]->vertexPt, p_dir1, tempCD[1]->vertexPt, vertexPt);
             p_dir0 = tempDir0;
@@ -2859,12 +2864,12 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
             p_dir1 = tempDir1;
         }
 
-        if (flag_type)//ÉÏÄ£ ´´½¨¶à¸ö¸¨ÖúÏß
+        if (flag_type)//ä¸Šæ¨¡ åˆ›å»ºå¤šä¸ªè¾…åŠ©çº¿
         {
             angle0 = MyFun::angleOfVectors(p_dir0, p_dir1);
-            if (angle0 > angle_Max)//Á½ÌõÖ±Ïß
+            if (angle0 > angle_Max|| angle0 < angle_Min)//ä¸¤æ¡ç›´çº¿
             {
-                if (angle0 < PI / 2)
+                if (angle0 < angle_Max1)
                 {
                     double angle_1 = MyFun::angleOfVectors(p_dir0, tempCD[0]->dir_Center);
                     double angle_2 = MyFun::angleOfVectors(p_dir1, tempCD[1]->dir_Center);
@@ -2890,6 +2895,14 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
                 }
                 else
                 {
+                    UF_VEC3_sub(tempCD[0]->vertexPt, tempCD[1]->vertexPt, temp3D);
+                    double angle0 = MyFun::angleOfVectors(tempCD[0]->dir_Center, temp3D);
+                    double angle1 = PI - MyFun::angleOfVectors(tempCD[1]->dir_Center, temp3D);//çŸ«æ­£è§’åº¦
+                    if (angle0>angle1)
+                        MyFun::intersectPtOfLines_(tempCD[0]->dir_Center, tempCD[0]->vertexPt, p_dir1, tempCD[1]->vertexPt, vertexPt);
+                    else
+                        MyFun::intersectPtOfLines_(p_dir0, tempCD[0]->vertexPt, tempCD[1]->dir_Center, tempCD[1]->vertexPt, vertexPt);
+
                     UF_VEC3_copy(vertexPt, lt.end_point);
                     UF_VEC3_copy(tempCD[0]->vertexPt, lt.start_point);
                     UF_CURVE_create_line(&lt, &line_id);
@@ -2900,7 +2913,7 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
                     assist.push_back(new CurveData(line_id));
                 }
             }
-            else//ÉÏÄ£ ÈıÌõÖ±Ïß
+            else//ä¸Šæ¨¡ ä¸‰æ¡ç›´çº¿
             {
                 MyFun::getDirectionPos(tempDir0, tempCD[0]->vertexPt, width, pt0);
                 MyFun::getDirectionPos(tempDir1, tempCD[1]->vertexPt, width, pt1);
@@ -2920,7 +2933,7 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
                 assist.push_back(new CurveData(line_id));
             }
         }
-        else //ÏÂÄ£´¦Àí·½·¨
+        else //ä¸‹æ¨¡å¤„ç†æ–¹æ³•
         {
             
             MyFun::getDirectionPos(tempDir0, tempCD[0]->vertexPt, -width, pt0);
@@ -2968,7 +2981,7 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
                     else
                         UF_VEC3_copy(vertexPt, pt1_);
 
-                if (MyFun::is_Equal(pt0_, vertexPt, 0.001) || MyFun::is_Equal(pt1_, vertexPt, 0.001))//4ÌõÖ±Ïß
+                if (MyFun::is_Equal(pt0_, vertexPt, 0.001) || MyFun::is_Equal(pt1_, vertexPt, 0.001))//4æ¡ç›´çº¿
                 {
                     UF_VEC3_copy(vertexPt, pt0_);
                     UF_VEC3_copy(vertexPt, pt1_);
@@ -2990,7 +3003,7 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
                     assist.push_back(new CurveData(line_id));
 
                 }
-                else//ÎåÌõÖ±Ïß
+                else//äº”æ¡ç›´çº¿
                 {
                     UF_VEC3_copy(pt0, lt.end_point);
                     UF_VEC3_copy(tempCD[0]->vertexPt, lt.start_point);
@@ -3064,9 +3077,9 @@ void closeAssistCurve(CurveData** tempCD, double dir[3], double width, double le
 
 }
 
-void splinesProcessToLines(vector<tag_t> &tempSplines) //¸Õ¼ş·ûĞÍ±ÜÈÃÓÃ.
+void splinesProcessToLines(vector<tag_t> &tempSplines) //åˆšä»¶ç¬¦å‹é¿è®©ç”¨.
 {
-    //ÑùÌõ´òÉ¢:
+    //æ ·æ¡æ‰“æ•£:
     vector<tag_t> tempVVV;
     tag_p_t segments = NULL;
     tag_t tempT;
@@ -3129,7 +3142,7 @@ void splinesProcessToLines(vector<tag_t> &tempSplines) //¸Õ¼ş·ûĞÍ±ÜÈÃÓÃ.
         }
     }
 
-    //ÅÅĞò´¦Àí²¿·Ö:
+    //æ’åºå¤„ç†éƒ¨åˆ†:
     vector<vector<CurveData>> simplePro;
     vector<vccdata> trimVCC;
     vector<CurveData> vertexPts;
